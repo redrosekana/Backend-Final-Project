@@ -16,13 +16,14 @@ export default async function Register(req:Request, res:Response){
       let {displayName , username , password , email} = req.body
       
       if (!displayName || !username || !password || !email ) {
-            res.status(400).json({"message":"ข้อมูลไม่ครบ"})
+            res.status(400).json({"message":"need additnal information"})
       }else{
             try {
-                  const repeatdisplayName = await User_member.find({"displayName":displayName})
-                  const repeatUsername = await User_member.find({"username":username})
-                  const repeatEmail = await User_member.find({"email":email})
+                  const repeatdisplayName = await User_member.find({"displayName":displayName.trim()})
+                  const repeatUsername = await User_member.find({"username":username.trim()})
+                  const repeatEmail = await User_member.find({"email":email.trim()})
                   
+                  console.log(repeatdisplayName)
                   if (repeatdisplayName.length > 0) {
                         res.status(400).json({"message":"displayName repeated"})
                   }else if (repeatUsername.length > 0) {
@@ -40,7 +41,7 @@ export default async function Register(req:Request, res:Response){
                               "email":email
                         }
 
-                        const result = await User_member.create(user)
+                        await User_member.create(user)
                         res.status(200).json({"message":"register success"})
                   }
             }catch(err:any) {

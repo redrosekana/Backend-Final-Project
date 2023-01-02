@@ -31,12 +31,12 @@ export default async function GatewayFacebook(req:Request, res:Response) {
             const payload = req.user
             const accessToken:string = jwt.sign(payload,secretToken,{
                   "algorithm":"HS256",
-                  expiresIn: "1h"
+                  expiresIn: "108000000ms"
             })
 
             const refreshToken:string = jwt.sign(payload,secretToken,{
                   "algorithm":"HS256",
-                  expiresIn: "1d"
+                  expiresIn: "10h"
             })
             
             res.redirect(`http://localhost:5173?accessToken=${accessToken}&refreshToken=${refreshToken}`)

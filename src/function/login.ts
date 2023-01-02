@@ -16,7 +16,7 @@ export default async function Login(req:Request ,res:Response){
                   const existUser = await User_member.findOne({username:{$eq:username}})
             
                   if (!existUser) {
-                        res.status(400).json({"message":"don't exisit user in database"})
+                        res.status(400).json({"message":"don't exist user in database"})
                   }else {
                         const hashPassword = existUser.password
                         const checkPassword = await bcrypt.compare(String(password),hashPassword)
@@ -31,12 +31,12 @@ export default async function Login(req:Request ,res:Response){
                               const secret:string = process.env.SECRET_TOKEN as string
                               const accessToken = jwt.sign(payload,secret,{
                                     "algorithm":"HS256",
-                                    expiresIn: "1h"
+                                    expiresIn: "108000000ms"
                               })
 
                               const refreshToken = jwt.sign(payload,secret,{
                                     "algorithm":"HS256",
-                                    expiresIn: "1d"
+                                    expiresIn: "10h"
                               })
                               
                               res.status(200).json({
