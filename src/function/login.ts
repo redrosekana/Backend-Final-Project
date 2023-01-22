@@ -28,17 +28,21 @@ export default async function Login(req:Request ,res:Response){
                                     "displayName":existUser.displayName,
                                     "username": existUser.username
                               }
-                              const secret:string = process.env.SECRET_TOKEN as string
-                              const accessToken = jwt.sign(payload,secret,{
-                                    "algorithm":"HS256",
-                                    expiresIn: "108000000ms"
-                              })
 
-                              const refreshToken = jwt.sign(payload,secret,{
+                              const secret_accessToken:string = process.env.SECRET_ACCESSTOKEN as string
+                              const secret_refreshToken:string = process.env.SECRET_REFRESHTOKEN as string
+                              const accessToken = jwt.sign(payload,secret_accessToken,{
                                     "algorithm":"HS256",
-                                    expiresIn: "10h"
+                                    expiresIn: "10000ms"
                               })
-                              
+                              //"10000ms"
+                              //"1800000ms"
+                              const refreshToken = jwt.sign(payload,secret_refreshToken,{
+                                    "algorithm":"HS256",
+                                    expiresIn: "20000ms"
+                              })
+                              //"20000ms"
+                              //"2700000ms"
                               res.status(200).json({
                                     "message":"login success",
                                     "accessToken":accessToken,

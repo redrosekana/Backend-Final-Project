@@ -33,13 +33,13 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 passport.serializeUser((user:any, done) => {
-      console.log("serializeUser = ",user)
-      done(undefined,user)
+      //console.log("serializeUser = ",user)
+      done(null,user)
 })
 
 passport.deserializeUser((user:any, done) => {
-      console.log("deserializeUser = ",user)
-      done(undefined,user)
+      //console.log("deserializeUser = ",user)
+      done(null,user)
 })
 
 

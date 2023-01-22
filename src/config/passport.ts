@@ -18,16 +18,12 @@ export default function setPassport() {
           },
       
           function(accessToken, refreshToken, profile, done) {
-            // console.log("accessToken = ",accessToken)
-            // console.log("refreshToken = ",refreshToken)
-            // console.log("payload = ",profile)
-            // console.log(profile)
             const profileCustom = {
               "facebookId": profile.id,
               "facebookName": profile.displayName,
             }
-            console.log(profile)
-            done(undefined,profileCustom);
+            
+            done(null,profileCustom);
           }
       ))
 }
