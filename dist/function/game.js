@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 function Game(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(req.payload);
-        res.status(200).json({ "message": "boardgame popular" });
+        console.log("message game =", req.proflie);
+        res.status(200).json(Object.assign({ "message": "boardgame popular" }, req["proflie"]));
     });
 }
 exports.default = Game;

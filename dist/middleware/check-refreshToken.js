@@ -31,46 +31,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = __importStar(require("jsonwebtoken"));
-//* import model
-const user_facebook_1 = __importDefault(require("../model/user-facebook"));
-function GatewayFacebook(req, res) {
+function checkToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const existFacebookMember = yield user_facebook_1.default.findOne({ "facebookId": { $eq: req.user.facebookId } });
-            if (!existFacebookMember) {
-                const addInfo = {
-                    facebookId: req.user.facebookId,
-                    facebookName: req.user.facebookName
-                };
-                yield user_facebook_1.default.create(addInfo);
-            }
-            const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
-            const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
-            const payload = req.user;
-            const accessToken = jwt.sign(payload, secret_accessToken, {
-                "algorithm": "HS256",
-                expiresIn: "10000ms"
-            });
-            //"10000ms"
-            //"1800000ms"
-            const refreshToken = jwt.sign(payload, secret_refreshToken, {
-                "algorithm": "HS256",
-                expiresIn: "20000ms"
-            });
-            //"20000ms"
-            //"2700000ms"
-            const url_gateway = process.env.GATEWATFACEBOOK;
-            res.redirect(`${url_gateway}?accessToken=${accessToken}&refreshToken=${refreshToken}`);
+        let token = req.headers.authorization;
+        console.log("refreshtoken =", token);
+        if (!(token === null || token === void 0 ? void 0 : token.includes("Bearer "))) {
+            res.status(400).json({ "message": "must pass Bearer in front of token or haven't token" });
         }
-        catch (err) {
-            console.log(err);
-            res.status(500).json({ "message": "occurred error in server" });
+        else {
+            const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
+            const separateToken = token.split(" ");
+            token = separateToken[1];
+            try {
+                const jwtDecode = jwt.verify(token, secret_refreshToken);
+                req.payload = jwtDecode;
+                next();
+            }
+            catch (err) {
+                console.log(err.message);
+                if (err.message === "jwt expired") {
+                    res.status(401).json({ "message": "expired refreshToken" });
+                }
+                else {
+                    res.status(401).json({ "message": "unauthorization refreshToken" });
+                }
+            }
         }
     });
 }
-exports.default = GatewayFacebook;
+exports.default = checkToken;

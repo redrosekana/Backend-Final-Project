@@ -42,7 +42,6 @@ passport.deserializeUser((user:any, done) => {
       done(null,user)
 })
 
-
 //* set mongodb if don't set, it will occure in terminal 
 mongoose.set("strictQuery",false)
 const url_mongodb:string = String(process.env.URL_MONGODB)

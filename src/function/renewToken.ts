@@ -3,7 +3,7 @@ import { Request, Response} from "express"
 import * as jwt from "jsonwebtoken"
 
 export default function RenewToken(req:Request, res:Response){
-
+    
     const secret_accessToken:string = process.env.SECRET_ACCESSTOKEN as string
     const secret_refreshToken:string = process.env.SECRET_REFRESHTOKEN as string
     console.log("payload old",req.payload)

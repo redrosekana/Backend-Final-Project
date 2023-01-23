@@ -55,12 +55,12 @@ app.use((0, morgan_1.default)("dev"));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 passport_1.default.serializeUser((user, done) => {
-    console.log("serializeUser = ", user);
-    done(undefined, user);
+    //console.log("serializeUser = ",user)
+    done(null, user);
 });
 passport_1.default.deserializeUser((user, done) => {
-    console.log("deserializeUser = ", user);
-    done(undefined, user);
+    //console.log("deserializeUser = ",user)
+    done(null, user);
 });
 //* set mongodb if don't set, it will occure in terminal 
 mongoose_1.default.set("strictQuery", false);

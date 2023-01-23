@@ -42,6 +42,7 @@ const user_member_1 = __importDefault(require("../model/user-member"));
 function Login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, password } = req.body;
+        console.log(req.body);
         if (!username || !password) {
             res.status(400).json({ "message": "please input username or password" });
         }
@@ -62,15 +63,20 @@ function Login(req, res) {
                             "displayName": existUser.displayName,
                             "username": existUser.username
                         };
-                        const secret = process.env.SECRET_TOKEN;
-                        const accessToken = jwt.sign(payload, secret, {
+                        const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
+                        const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
+                        const accessToken = jwt.sign(payload, secret_accessToken, {
                             "algorithm": "HS256",
-                            expiresIn: "108000000ms"
+                            expiresIn: "10000ms"
                         });
-                        const refreshToken = jwt.sign(payload, secret, {
+                        //"10000ms"
+                        //"1800000ms"
+                        const refreshToken = jwt.sign(payload, secret_refreshToken, {
                             "algorithm": "HS256",
-                            expiresIn: "10h"
+                            expiresIn: "20000ms"
                         });
+                        //"20000ms"
+                        //"2700000ms"
                         res.status(200).json({
                             "message": "login success",
                             "accessToken": accessToken,

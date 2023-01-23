@@ -8,13 +8,13 @@ import User_member from "../model/user-member"
 
 export default async function Login(req:Request ,res:Response){
       const {username , password} = req.body
-      
+      console.log(req.body)
       if (!username || !password){
             res.status(400).json({"message":"please input username or password"})
       }else{
             try {
                   const existUser = await User_member.findOne({username:{$eq:username}})
-            
+                  
                   if (!existUser) {
                         res.status(400).json({"message":"don't exist user in database"})
                   }else {
