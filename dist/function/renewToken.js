@@ -25,7 +25,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = __importStar(require("jsonwebtoken"));
 function RenewToken(req, res) {
-    console.log("hello", "daya");
     const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
     const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
     console.log("payload old", req.payload);
