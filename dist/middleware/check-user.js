@@ -31,7 +31,7 @@ function checkUser(req, res, next) {
                 next();
             }
             else {
-                const result = yield user_facebook_1.default.findOne({ "facebookId": selectUser.facebookId });
+                const result = yield user_facebook_1.default.findOne({ "facebookName": selectUser.facebookName });
                 console.log("facebookmember = ", result);
                 req.proflie = {
                     "displayName": ((result === null || result === void 0 ? void 0 : result.displayName) ? result === null || result === void 0 ? void 0 : result.displayName : "guest"),
