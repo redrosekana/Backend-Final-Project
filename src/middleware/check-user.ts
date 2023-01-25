@@ -21,7 +21,7 @@ export default async function checkUser(req:Request , res:Response , next:NextFu
                   }
                   next()
             }else {
-                  const result = await Facebook_member.findOne({"facebookId":selectUser.facebookId})
+                  const result = await Facebook_member.findOne({"facebookName":selectUser.facebookName})
                   console.log("facebookmember = ",result)
                   req.proflie = {
                         "displayName":(result?.displayName ? result?.displayName : "guest"),

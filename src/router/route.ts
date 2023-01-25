@@ -1,5 +1,6 @@
 //* import library
 import express, { Router, Request, Response } from "express"
+import axios from "axios"
 import passport from "passport"
 
 //* import functional
@@ -8,6 +9,7 @@ import Login from "../function/login"
 import GatewayFacebook from "../function/gatewayFacebook"
 import Game from "../function/game"
 import RenewToken from "../function/renewToken"
+import MangeFacebooka from "../function/manageFacebook"
 
 
 //* import middleware
@@ -25,6 +27,8 @@ router.get("/gateway",GatewayFacebook)
 
 router.get("/user",checkAccessToken,checkUser,Game)
 router.get("/renewUser",checkRefreshToken,RenewToken)
+
+router.post("/testfacebook",MangeFacebooka)
 
 
 export default router
