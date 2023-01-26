@@ -8,12 +8,12 @@ import User_member from "../model/user-member"
 
 export default async function Login(req:Request ,res:Response){
       const {username , password} = req.body
-      console.log(req.body)
+      
       if (!username || !password){
             res.status(400).json({"message":"please input username or password"})
       }else{
             try {
-                  const existUser = await User_member.findOne({username:{$eq:username}})
+                  const existUser = await User_member.findOne({"username":{$eq:username}})
                   
                   if (!existUser) {
                         res.status(400).json({"message":"don't exist user in database"})
@@ -24,7 +24,7 @@ export default async function Login(req:Request ,res:Response){
                         if (!checkPassword) {
                               res.status(400).json({"message":"password invalid"})
                         }else {
-                              const payload:{displayName:string, username:string} = {
+                              const payload = {
                                     "displayName":existUser.displayName,
                                     "username": existUser.username
                               }
@@ -33,13 +33,13 @@ export default async function Login(req:Request ,res:Response){
                               const secret_refreshToken:string = process.env.SECRET_REFRESHTOKEN as string
                               const accessToken = jwt.sign(payload,secret_accessToken,{
                                     "algorithm":"HS256",
-                                    expiresIn: "10000ms"
+                                    expiresIn: "1800000ms"
                               })
                               //"10000ms"
                               //"1800000ms"
                               const refreshToken = jwt.sign(payload,secret_refreshToken,{
                                     "algorithm":"HS256",
-                                    expiresIn: "20000ms"
+                                    expiresIn: "2700000ms"
                               })
                               //"20000ms"
                               //"2700000ms"

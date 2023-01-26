@@ -30,38 +30,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importStar(require("mongoose"));
 const morgan_1 = __importDefault(require("morgan"));
-const express_session_1 = __importDefault(require("express-session"));
-const passport_1 = __importDefault(require("passport"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 //* import mainpoint && config passport
 const route_1 = __importDefault(require("./router/route"));
-const passport_2 = __importDefault(require("./config/passport"));
-(0, passport_2.default)();
 //* declare value && configure value
 const app = (0, express_1.default)();
 const port = String(process.env.PORT);
 const secret = process.env.SECRET_SESSION;
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, express_session_1.default)({
-    secret: secret,
-    resave: false,
-    saveUninitialized: false
-}));
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)("dev"));
-app.use(passport_1.default.initialize());
-app.use(passport_1.default.session());
-passport_1.default.serializeUser((user, done) => {
-    //console.log("serializeUser = ",user)
-    done(null, user);
-});
-passport_1.default.deserializeUser((user, done) => {
-    //console.log("deserializeUser = ",user)
-    done(null, user);
-});
 //* set mongodb if don't set, it will occure in terminal 
 mongoose_1.default.set("strictQuery", false);
 const url_mongodb = String(process.env.URL_MONGODB);

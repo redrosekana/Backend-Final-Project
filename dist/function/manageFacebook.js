@@ -42,49 +42,50 @@ const user_facebook_1 = __importDefault(require("../model/user-facebook"));
 function ManageFacebook(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId, accessTokenFacebook } = req.body;
-        console.log(req.body);
-        console.log(userId);
-        console.log(accessTokenFacebook);
-        const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
-        const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
-        try {
-            const result = yield axios_1.default.get(`https://graph.facebook.com/v4.0/${userId}?fields=id,name,email&access_token=${accessTokenFacebook}`);
-            console.log(result.data);
-            const facebookId = result.data.id;
-            const facebookName = result.data.name;
-            const existUser = yield user_facebook_1.default.findOne({ "facebookId": { $eq: facebookId } });
-            console.log(existUser);
-            if (!existUser) {
-                const facebookUser = yield user_facebook_1.default.create({
-                    "facebookId": facebookId,
-                    "facebookName": facebookName
-                });
-                console.log("first add user");
-            }
-            const payload = {
-                facebookName
-            };
-            const accessToken = jwt.sign(payload, secret_accessToken, {
-                "algorithm": "HS256",
-                expiresIn: "10000ms"
-            });
-            //"10000ms"
-            //"1800000ms"
-            const refreshToken = jwt.sign(payload, secret_refreshToken, {
-                "algorithm": "HS256",
-                expiresIn: "20000ms"
-            });
-            res.status(201).json({
-                message: "success login facebook",
-                accessToken,
-                refreshToken
+        if (!userId || !accessTokenFacebook) {
+            res.status(400).json({
+                "message": "must pass also userId and accessTokenFacebook"
             });
         }
-        catch (err) {
-            console.log(err);
-            res.status(500).json({
-                "message": "error in server"
-            });
+        else {
+            const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
+            const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
+            try {
+                const result = yield axios_1.default.get(`https://graph.facebook.com/v4.0/${userId}?fields=id,name,email&access_token=${accessTokenFacebook}`);
+                // console.log(result.data)
+                const facebookId = result.data.id;
+                const facebookName = result.data.name;
+                const existUser = yield user_facebook_1.default.findOne({ "facebookId": { $eq: facebookId } });
+                console.log(existUser);
+                if (!existUser) {
+                    yield user_facebook_1.default.create({
+                        "facebookId": facebookId,
+                        "facebookName": facebookName
+                    });
+                }
+                const payload = { facebookName };
+                const accessToken = jwt.sign(payload, secret_accessToken, {
+                    "algorithm": "HS256",
+                    expiresIn: "1800000ms"
+                });
+                //"10000ms"
+                //"1800000ms"
+                const refreshToken = jwt.sign(payload, secret_refreshToken, {
+                    "algorithm": "HS256",
+                    expiresIn: "2700000ms"
+                });
+                res.status(200).json({
+                    "message": "success login facebook",
+                    accessToken,
+                    refreshToken
+                });
+            }
+            catch (err) {
+                console.log(err);
+                res.status(500).json({
+                    "message": "error in server"
+                });
+            }
         }
     });
 }

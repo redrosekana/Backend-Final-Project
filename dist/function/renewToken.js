@@ -27,7 +27,7 @@ const jwt = __importStar(require("jsonwebtoken"));
 function RenewToken(req, res) {
     const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
     const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
-    console.log("payload old", req.payload);
+    console.log("payload old = ", req.payload);
     const selectUser = req.payload;
     const payload = {};
     if (selectUser.username) {
@@ -38,20 +38,19 @@ function RenewToken(req, res) {
     }
     else {
         Object.assign(payload, {
-            "facebookId": req.payload.facebookId,
             "facebookName": req.payload.facebookName,
         });
     }
     console.log("payload renew = ", payload);
     const accessToken = jwt.sign(payload, secret_accessToken, {
         "algorithm": "HS256",
-        expiresIn: "10000ms"
+        expiresIn: "1800000ms"
     });
     //"10000ms"
     //"1800000ms"
     const refreshToken = jwt.sign(payload, secret_refreshToken, {
         "algorithm": "HS256",
-        expiresIn: "20000ms"
+        expiresIn: "2700000ms"
     });
     //"20000ms"
     //"2700000ms"

@@ -6,7 +6,6 @@ export interface UserMemeberInterfaceModel {
       lat?:string
       lon?:string
 }
-
 export interface FacebookMemeberInterfaceModel {
       facebookId:string
       facebookName:string

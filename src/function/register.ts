@@ -13,7 +13,7 @@ interface RegisterMember {
 }
 
 export default async function Register(req:Request, res:Response){
-      let {displayName , username , password , email} = req.body
+      let {displayName , username , password , email}:RegisterMember = req.body
       
       if (!displayName || !username || !password || !email ) {
             res.status(400).json({"message":"need additnal information"})
@@ -35,10 +35,10 @@ export default async function Register(req:Request, res:Response){
                         const saltRounds:number = Number(process.env.SALTROUNDS)
                         const hashPassword = await bcrypt.hash(String(password),saltRounds)
                         const user:RegisterMember = {
-                              "displayName":displayName, 
-                              "username":username, 
-                              "password":hashPassword, 
-                              "email":email
+                              "displayName":displayName.trim(), 
+                              "username":username.trim(), 
+                              "password":hashPassword.trim(), 
+                              "email":email.trim()
                         }
 
                         await User_member.create(user)

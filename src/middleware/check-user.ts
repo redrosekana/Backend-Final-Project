@@ -8,7 +8,7 @@ import Facebook_member from "../model/user-facebook";
 export default async function checkUser(req:Request , res:Response , next:NextFunction){
       
       const selectUser = req.payload
-      console.log("check-user = ",selectUser)
+      // console.log("check-user = ",selectUser)
       
       try {
             if (selectUser.username) {

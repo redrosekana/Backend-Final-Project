@@ -40,10 +40,10 @@ function Register(req, res) {
                     const saltRounds = Number(process.env.SALTROUNDS);
                     const hashPassword = yield bcrypt_1.default.hash(String(password), saltRounds);
                     const user = {
-                        "displayName": displayName,
-                        "username": username,
-                        "password": hashPassword,
-                        "email": email
+                        "displayName": displayName.trim(),
+                        "username": username.trim(),
+                        "password": hashPassword.trim(),
+                        "email": email.trim()
                     };
                     yield user_member_1.default.create(user);
                     res.status(200).json({ "message": "register success" });

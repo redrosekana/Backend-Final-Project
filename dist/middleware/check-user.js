@@ -18,7 +18,7 @@ const user_facebook_1 = __importDefault(require("../model/user-facebook"));
 function checkUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const selectUser = req.payload;
-        console.log("check-user = ", selectUser);
+        // console.log("check-user = ",selectUser)
         try {
             if (selectUser.username) {
                 const result = yield user_member_1.default.findOne({ "username": selectUser.username });

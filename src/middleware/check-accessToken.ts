@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken"
 
 export default async function checkToken(req:Request, res:Response, next:NextFunction) {
       let token:string | undefined = req.headers.authorization
-      console.log("accesstoken =",token)
+      // console.log("accesstoken =",token)
       
       if (!token?.includes("Bearer ")){
             res.status(400).json({"message":"must pass Bearer in front of token or haven't token"})

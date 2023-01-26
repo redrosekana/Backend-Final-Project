@@ -36,7 +36,7 @@ const jwt = __importStar(require("jsonwebtoken"));
 function checkToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         let token = req.headers.authorization;
-        console.log("accesstoken =", token);
+        // console.log("accesstoken =",token)
         if (!(token === null || token === void 0 ? void 0 : token.includes("Bearer "))) {
             res.status(400).json({ "message": "must pass Bearer in front of token or haven't token" });
         }

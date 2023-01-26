@@ -6,7 +6,7 @@ export default function RenewToken(req:Request, res:Response){
     
     const secret_accessToken:string = process.env.SECRET_ACCESSTOKEN as string
     const secret_refreshToken:string = process.env.SECRET_REFRESHTOKEN as string
-    console.log("payload old",req.payload)
+    console.log("payload old = ",req.payload)
     
     const selectUser = req.payload
     const payload = {}
@@ -18,9 +18,7 @@ export default function RenewToken(req:Request, res:Response){
         })
     }else {
         Object.assign(payload,{
-            "facebookId": req.payload.facebookId,
             "facebookName": req.payload.facebookName,
-              
         })
     }
 
@@ -28,14 +26,14 @@ export default function RenewToken(req:Request, res:Response){
 
     const accessToken = jwt.sign(payload,secret_accessToken,{
         "algorithm":"HS256",
-        expiresIn: "10000ms"
+        expiresIn: "1800000ms"
     })
     //"10000ms"
     //"1800000ms"
 
     const refreshToken = jwt.sign(payload,secret_refreshToken,{
         "algorithm":"HS256",
-        expiresIn: "20000ms"
+        expiresIn: "2700000ms"
     })
     //"20000ms"
     //"2700000ms"

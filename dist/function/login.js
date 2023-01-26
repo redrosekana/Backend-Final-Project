@@ -42,13 +42,12 @@ const user_member_1 = __importDefault(require("../model/user-member"));
 function Login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, password } = req.body;
-        console.log(req.body);
         if (!username || !password) {
             res.status(400).json({ "message": "please input username or password" });
         }
         else {
             try {
-                const existUser = yield user_member_1.default.findOne({ username: { $eq: username } });
+                const existUser = yield user_member_1.default.findOne({ "username": { $eq: username } });
                 if (!existUser) {
                     res.status(400).json({ "message": "don't exist user in database" });
                 }
@@ -67,13 +66,13 @@ function Login(req, res) {
                         const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
                         const accessToken = jwt.sign(payload, secret_accessToken, {
                             "algorithm": "HS256",
-                            expiresIn: "10000ms"
+                            expiresIn: "1800000ms"
                         });
                         //"10000ms"
                         //"1800000ms"
                         const refreshToken = jwt.sign(payload, secret_refreshToken, {
                             "algorithm": "HS256",
-                            expiresIn: "20000ms"
+                            expiresIn: "2700000ms"
                         });
                         //"20000ms"
                         //"2700000ms"
