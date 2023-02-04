@@ -11,6 +11,9 @@ const login_1 = __importDefault(require("../function/login"));
 const game_1 = __importDefault(require("../function/game"));
 const renewToken_1 = __importDefault(require("../function/renewToken"));
 const manageFacebook_1 = __importDefault(require("../function/manageFacebook"));
+const email_1 = __importDefault(require("../function/email"));
+const verifyEmail_1 = __importDefault(require("../function/verifyEmail"));
+const updatePassword_1 = __importDefault(require("../function/updatePassword"));
 //* import middleware
 const check_accessToken_1 = __importDefault(require("../middleware/check-accessToken"));
 const check_user_1 = __importDefault(require("../middleware/check-user"));
@@ -18,6 +21,9 @@ const check_refreshToken_1 = __importDefault(require("../middleware/check-refres
 const router = express_1.default.Router();
 router.post("/register", register_1.default);
 router.post("/loginMember", login_1.default);
+router.post("/email", email_1.default);
+router.get("/email", verifyEmail_1.default);
+router.post("/password", updatePassword_1.default);
 router.get("/user", check_accessToken_1.default, check_user_1.default, game_1.default);
 router.get("/renewUser", check_refreshToken_1.default, renewToken_1.default);
 router.post("/facebook", manageFacebook_1.default);
