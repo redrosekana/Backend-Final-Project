@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = __importStar(require("jsonwebtoken"));
 const bcrypt = __importStar(require("bcrypt"));
-//* import model
+// import model
 const user_member_1 = __importDefault(require("../model/user-member"));
 function UpdatePassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +45,7 @@ function UpdatePassword(req, res) {
         const { password, token } = req.body;
         if (!password || !token) {
             res.status(400).json({
-                "message": "required password and token"
+                message: "need password and token"
             });
         }
         else {
@@ -53,22 +53,19 @@ function UpdatePassword(req, res) {
                 const decode = jwt.verify(token, secret_wait_email);
                 const infomation = decode;
                 const saltRounds = Number(process.env.SALTROUNDS);
-                const hashPassword = yield bcrypt.hash(password, saltRounds);
+                const hashPassword = yield bcrypt.hash(String(password), saltRounds);
                 if (typeof infomation === "object") {
                     const user = yield user_member_1.default.findOne({ email: { $eq: infomation.email } });
-                    const result = yield user_member_1.default.findByIdAndUpdate(String(user === null || user === void 0 ? void 0 : user._id), {
+                    yield user_member_1.default.findByIdAndUpdate(String(user === null || user === void 0 ? void 0 : user._id), {
                         password: hashPassword
                     });
-                    console.log("success update = ", result);
                     res.status(200).json({
                         "message": "update password success"
                     });
                 }
             }
             catch (err) {
-                const message = err.message;
-                console.log(message);
-                if (message === "jwt expired") {
+                if (err.message === "jwt expired") {
                     res.status(400).json({
                         "message": "jwt expired token"
                     });

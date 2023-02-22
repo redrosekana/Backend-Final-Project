@@ -36,9 +36,8 @@ const jwt = __importStar(require("jsonwebtoken"));
 function checkToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         let token = req.headers.authorization;
-        // console.log("accesstoken =",token)
         if (!(token === null || token === void 0 ? void 0 : token.includes("Bearer "))) {
-            res.status(400).json({ "message": "must pass Bearer in front of token or haven't token" });
+            res.status(400).json({ message: "must pass Bearer in front of token or haven't token" });
         }
         else {
             const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
@@ -50,12 +49,12 @@ function checkToken(req, res, next) {
                 next();
             }
             catch (err) {
-                console.log(err.message);
+                console.log(err);
                 if (err.message === "jwt expired") {
-                    res.status(401).json({ "message": "expired accessToken" });
+                    res.status(401).json({ message: "expired accessToken" });
                 }
                 else {
-                    res.status(401).json({ "message": "unauthorization accessToken" });
+                    res.status(401).json({ message: "unauthorization accessToken" });
                 }
             }
         }

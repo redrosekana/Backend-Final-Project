@@ -37,14 +37,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = __importStar(require("jsonwebtoken"));
 const axios_1 = __importDefault(require("axios"));
-//* import model
+// import model
 const user_facebook_1 = __importDefault(require("../model/user-facebook"));
 function ManageFacebook(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId, accessTokenFacebook } = req.body;
         if (!userId || !accessTokenFacebook) {
             res.status(400).json({
-                "message": "must pass also userId and accessTokenFacebook"
+                "message": "need userId and accessTokenFacebook"
             });
         }
         else {
@@ -52,30 +52,28 @@ function ManageFacebook(req, res) {
             const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
             try {
                 const result = yield axios_1.default.get(`https://graph.facebook.com/v4.0/${userId}?fields=id,name,email&access_token=${accessTokenFacebook}`);
-                // console.log(result.data)
                 const facebookId = result.data.id;
                 const facebookName = result.data.name;
                 const existUser = yield user_facebook_1.default.findOne({ "facebookId": { $eq: facebookId } });
-                console.log(existUser);
                 if (!existUser) {
                     yield user_facebook_1.default.create({
-                        "facebookId": facebookId,
-                        "facebookName": facebookName
+                        facebookId: facebookId,
+                        facebookName: facebookName
                     });
                 }
                 const payload = { facebookName };
                 const accessToken = jwt.sign(payload, secret_accessToken, {
-                    "algorithm": "HS256",
+                    algorithm: "HS256",
                     expiresIn: "1800000ms"
                 });
                 //"10000ms"
                 //"1800000ms"
                 const refreshToken = jwt.sign(payload, secret_refreshToken, {
-                    "algorithm": "HS256",
+                    algorithm: "HS256",
                     expiresIn: "2700000ms"
                 });
                 res.status(200).json({
-                    "message": "success login facebook",
+                    message: "success login facebook",
                     accessToken,
                     refreshToken
                 });
@@ -83,7 +81,7 @@ function ManageFacebook(req, res) {
             catch (err) {
                 console.log(err);
                 res.status(500).json({
-                    "message": "error in server"
+                    message: "occurred error in server"
                 });
             }
         }

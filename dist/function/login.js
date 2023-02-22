@@ -37,49 +37,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt = __importStar(require("jsonwebtoken"));
-//* import model
+// import model
 const user_member_1 = __importDefault(require("../model/user-member"));
 function Login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { username, password } = req.body;
         if (!username || !password) {
-            res.status(400).json({ "message": "please input username or password" });
+            res.status(400).json({ message: "need input username and password" });
         }
         else {
             try {
-                const existUser = yield user_member_1.default.findOne({ "username": { $eq: username } });
+                const existUser = yield user_member_1.default.findOne({ username: { $eq: username } });
                 if (!existUser) {
-                    res.status(400).json({ "message": "don't exist user in database" });
+                    res.status(400).json({ message: "don't exist user in database" });
                 }
                 else {
                     const hashPassword = existUser.password;
                     const checkPassword = yield bcrypt_1.default.compare(String(password), hashPassword);
                     if (!checkPassword) {
-                        res.status(400).json({ "message": "password invalid" });
+                        res.status(400).json({ message: "password invalid" });
                     }
                     else {
                         const payload = {
-                            "displayName": existUser.displayName,
-                            "username": existUser.username
+                            displayName: existUser.displayName,
+                            username: existUser.username
                         };
                         const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
                         const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
                         const accessToken = jwt.sign(payload, secret_accessToken, {
-                            "algorithm": "HS256",
+                            algorithm: "HS256",
                             expiresIn: "1800000ms"
                         });
                         //"10000ms"
                         //"1800000ms"
                         const refreshToken = jwt.sign(payload, secret_refreshToken, {
-                            "algorithm": "HS256",
+                            algorithm: "HS256",
                             expiresIn: "2700000ms"
                         });
                         //"20000ms"
                         //"2700000ms"
                         res.status(200).json({
-                            "message": "login success",
-                            "accessToken": accessToken,
-                            "refreshToken": refreshToken
+                            message: "login success",
+                            accessToken: accessToken,
+                            refreshToken: refreshToken
                         });
                     }
                 }

@@ -29,32 +29,27 @@ function VerifyEmail(req, res) {
     const { token } = req.query;
     try {
         const decode = jwt.verify(token, secret_waitemail);
-        console.log(decode);
-        res.status(200).json({
-            "message": "ok"
-        });
+        res.status(200).json({ message: "ok" });
     }
     catch (err) {
-        const message = err.message;
-        console.log(message);
-        if (message === "invalid signature") {
+        if (err.message === "invalid signature") {
             res.status(400).json({
-                "message": "invalid signature"
+                message: "invalid signature"
             });
         }
-        else if (message === "jwt expired") {
+        else if (err.message === "jwt expired") {
             res.status(400).json({
-                "message": "jwt expired token"
+                message: "jwt expired token"
             });
         }
-        else if (message === "jwt malformed") {
+        else if (err.message === "jwt malformed") {
             res.status(400).json({
-                "message": "jwt malformed"
+                message: "jwt malformed"
             });
         }
         else {
             res.status(500).json({
-                "message": "occurred error in server"
+                message: "occurred error in server"
             });
         }
     }

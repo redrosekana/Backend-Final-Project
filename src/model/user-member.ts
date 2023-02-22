@@ -1,8 +1,13 @@
 //* import library
 import { Schema, model } from "mongoose"
-
-//* import interface model
-import {UserMemeberInterfaceModel} from "./interface-model/interface"
+export interface UserMemeberInterfaceModel {
+      displayName:string
+      username:string
+      password:string
+      email:string
+      lat?:string
+      lon?:string
+}
 
 const userMemberSchema = new Schema<UserMemeberInterfaceModel>({
       displayName:{type:String},

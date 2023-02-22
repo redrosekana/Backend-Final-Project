@@ -39,9 +39,9 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const ejs_1 = __importDefault(require("ejs"));
 const jwt = __importStar(require("jsonwebtoken"));
 const fs = __importStar(require("fs"));
-//* import model
+// import model
 const user_member_1 = __importDefault(require("../model/user-member"));
-//* function check valid email
+// function check valid email
 function ValidateEmail(email) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         return (true);
@@ -58,20 +58,20 @@ function Email(req, res) {
         const { email } = req.body;
         if (!email) {
             res.status(400).json({
-                "message": "require a user email"
+                message: "require a user email"
             });
         }
         else if (!ValidateEmail(email)) {
             res.status(400).json({
-                "message": "invalid email format"
+                message: "invalid email format"
             });
         }
         else {
             try {
-                const result = yield user_member_1.default.findOne({ "email": { $eq: email } });
+                const result = yield user_member_1.default.findOne({ email: { $eq: email } });
                 if (!result) {
                     res.status(400).json({
-                        "message": "don't exist a user email in the database"
+                        message: "don't exist a user email in the database"
                     });
                 }
                 else {
@@ -85,7 +85,7 @@ function Email(req, res) {
                         },
                         logger: true
                     });
-                    const payload = { "email": email };
+                    const payload = { email: email };
                     const token = jwt.sign(payload, secret_waitemail, {
                         algorithm: "HS256",
                         expiresIn: "300000ms"
@@ -103,13 +103,12 @@ function Email(req, res) {
                     transporter.sendMail(info, (err, result) => {
                         if (err) {
                             res.status(500).json({
-                                "message": "occur error make to can't send email"
+                                message: "occur error make to can't send email"
                             });
                         }
                         else {
-                            console.log(result);
                             res.status(200).json({
-                                "message": "send email success"
+                                message: "send email success"
                             });
                         }
                     });

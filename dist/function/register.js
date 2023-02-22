@@ -13,28 +13,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
-//* import model
+// import model
 const user_member_1 = __importDefault(require("../model/user-member"));
 function Register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { displayName, username, password, email } = req.body;
         if (!displayName || !username || !password || !email) {
-            res.status(400).json({ "message": "need additnal information" });
+            res.status(400).json({ message: "need additnal information" });
         }
         else {
             try {
-                const repeatdisplayName = yield user_member_1.default.find({ "displayName": displayName.trim() });
-                const repeatUsername = yield user_member_1.default.find({ "username": username.trim() });
-                const repeatEmail = yield user_member_1.default.find({ "email": email.trim() });
-                console.log(repeatdisplayName);
+                const repeatdisplayName = yield user_member_1.default.find({ displayName: displayName.trim() });
+                const repeatUsername = yield user_member_1.default.find({ username: username.trim() });
+                const repeatEmail = yield user_member_1.default.find({ email: email.trim() });
                 if (repeatdisplayName.length > 0) {
-                    res.status(400).json({ "message": "displayName repeated" });
+                    res.status(400).json({ message: "displayName repeated" });
                 }
                 else if (repeatUsername.length > 0) {
-                    res.status(400).json({ "message": "username repeated" });
+                    res.status(400).json({ message: "username repeated" });
                 }
                 else if (repeatEmail.length > 0) {
-                    res.status(400).json({ "message": "email repeated" });
+                    res.status(400).json({ message: "email repeated" });
                 }
                 else {
                     const saltRounds = Number(process.env.SALTROUNDS);
@@ -46,12 +45,12 @@ function Register(req, res) {
                         "email": email.trim()
                     };
                     yield user_member_1.default.create(user);
-                    res.status(200).json({ "message": "register success" });
+                    res.status(200).json({ message: "register success" });
                 }
             }
             catch (err) {
                 console.log(err);
-                res.status(500).json({ "message": "occurred error in server" });
+                res.status(500).json({ message: "occurred error in server" });
             }
         }
     });

@@ -1,8 +1,13 @@
 //* import library
 import { Schema, model } from "mongoose"
 
-//* import interface model
-import { FacebookMemeberInterfaceModel } from "./interface-model/interface"
+export interface FacebookMemeberInterfaceModel {
+      facebookId:string
+      facebookName:string
+      displayName:string
+      lat?:string
+      lon?:string
+}
 
 const facebookMemberSchema = new Schema<FacebookMemeberInterfaceModel>({
       facebookId:{type:String},
