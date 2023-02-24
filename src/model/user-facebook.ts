@@ -1,7 +1,8 @@
-//* import library
+// import library
 import { Schema, model } from "mongoose"
 
-export interface FacebookMemeberInterfaceModel {
+// declare interface for model
+interface FacebookMemeberInterfaceModel {
       facebookId:string
       facebookName:string
       displayName:string

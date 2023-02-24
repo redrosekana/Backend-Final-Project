@@ -1,6 +1,8 @@
-//* import library
+// import library
 import { Schema, model } from "mongoose"
-export interface UserMemeberInterfaceModel {
+
+// declare interface for model
+interface UserMemeberInterfaceModel {
       displayName:string
       username:string
       password:string
