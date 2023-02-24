@@ -11,6 +11,7 @@ import Email from "../function/email"
 import VerifyEmail from "../function/verifyEmail"
 import UpdatePassword from "../function/updatePassword"
 
+import RecommendGuest from "../function/recommendGuest"
 
 // import middleware
 import checkAccessToken from "../middleware/check-accessToken"
@@ -27,5 +28,8 @@ router.post("/password",UpdatePassword)
 router.get("/user",checkAccessToken,checkUser,Game)
 router.get("/renew",checkRefreshToken,RenewToken)
 router.post("/facebook",ManageFacebook)
+
+router.get("/guest",RecommendGuest)
+
 
 export default router
