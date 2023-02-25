@@ -26,13 +26,12 @@ async function BoardGames(req:Request, res:Response){
     }
 }
 
-// |(^\[\'|\'\]$)|(^\[\"|\"\]$)
-// hello world
 const convertStringToArray = (value:string):string[] => {
-    const tmp11 = value.replace(/(^(\"|\')|(\"|\')$)|(^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]$)/ig,"")
-    const tmp2 = tmp11.replace(/(\'|\")\s*\,\s*(\'|\")/ig,",")
-    const tmp3 = tmp2.split(",")
-    return tmp3
+    const tmp1 = value.replace(/^(\"|\')|(\"|\')$|^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]\s*$/ig,"")
+    const tmp2 = tmp1.replace(/\s*(\'|\")\s*\,\s*(\'|\")\s*/ig,",")
+    const tmp3 = tmp2.replace(/\s+\,|\,\s+/ig," ")
+    const tmp4 = tmp3.split(",")
+    return tmp4
 }
 
 export default BoardGames

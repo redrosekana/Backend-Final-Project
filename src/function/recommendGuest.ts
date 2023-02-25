@@ -8,6 +8,7 @@ import * as fs from "fs"
 import Recommend_guest from "../model/recommend-guest"
 
 async function RecommendGuest(req:Request, res:Response){
+    // await Recommend_guest.deleteMany({})
     try {
         fs.createReadStream(path.resolve(__dirname,"../../public/csv/item-based.csv"))
         .pipe(csv())
@@ -23,12 +24,12 @@ async function RecommendGuest(req:Request, res:Response){
     }
 }
 
-// |(^\[\'|\'\]$)|(^\[\"|\"\]$)
 const convertStringToArray = (value:string):string[] => {
-    const tmp1 = value.replace(/(^(\"|\')|(\"|\')$)|(^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]$)/ig,"")
-    const tmp2 = tmp1.replace(/(\'|\")\s*\,\s*(\'|\")/ig,",")
-    const tmp3 = tmp2.split(",")
-    return tmp3
+    const tmp1 = value.replace(/^(\"|\')|(\"|\')$|^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]\s*$/ig,"")
+    const tmp2 = tmp1.replace(/\s*(\'|\")\s*\,\s*(\'|\")\s*/ig,",")
+    const tmp3 = tmp2.replace(/\s+\,|\,\s+/ig," ")
+    const tmp4 = tmp3.split(",")
+    return tmp4
 }
 
 export default RecommendGuest
