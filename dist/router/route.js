@@ -21,6 +21,10 @@ const check_accessToken_1 = __importDefault(require("../middleware/check-accessT
 const check_user_1 = __importDefault(require("../middleware/check-user"));
 const check_refreshToken_1 = __importDefault(require("../middleware/check-refreshToken"));
 const router = express_1.default.Router();
+// your welcome
+router.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello Your Welcome to Api Boardgame Recommu" });
+});
 router.post("/register", register_1.default);
 router.post("/login", login_1.default);
 router.post("/email", email_1.default);

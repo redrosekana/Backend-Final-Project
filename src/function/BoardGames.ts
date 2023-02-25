@@ -7,6 +7,9 @@ import * as fs from "fs"
 // import model
 import Boardgames from "../model/boardgames"
 
+// import helper
+import { convertStringToArray } from "../helper/convertStringToArray"
+
 async function BoardGames(req:Request, res:Response){
     try {
         fs.createReadStream(path.resolve(__dirname,"../../public/csv/games-cleaned.csv"))
@@ -25,13 +28,4 @@ async function BoardGames(req:Request, res:Response){
         res.status(500).json({message:"occurred error in server"})
     }
 }
-
-const convertStringToArray = (value:string):string[] => {
-    const tmp1 = value.replace(/^(\"|\')|(\"|\')$|^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]\s*$/ig,"")
-    const tmp2 = tmp1.replace(/\s*(\'|\")\s*\,\s*(\'|\")\s*/ig,",")
-    const tmp3 = tmp2.replace(/\s+\,|\,\s+/ig," ")
-    const tmp4 = tmp3.split(",")
-    return tmp4
-}
-
 export default BoardGames

@@ -40,14 +40,15 @@ const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 // import model
 const recommend_guest_1 = __importDefault(require("../model/recommend-guest"));
+// import helper
+const convertStringToArray_1 = require("../helper/convertStringToArray");
 function RecommendGuest(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // await Recommend_guest.deleteMany({})
         try {
             fs.createReadStream(path.resolve(__dirname, "../../public/csv/item-based.csv"))
                 .pipe((0, csv_parser_1.default)())
                 .on('data', (data) => __awaiter(this, void 0, void 0, function* () {
-                data.recommend = convertStringToArray(data.recommend);
+                data.recommend = (0, convertStringToArray_1.convertStringToArray)(data.recommend);
                 yield recommend_guest_1.default.create(data);
             }));
             res.status(200).json({ message: "success insert the boardgame for a guest" });
@@ -58,11 +59,4 @@ function RecommendGuest(req, res) {
         }
     });
 }
-const convertStringToArray = (value) => {
-    const tmp1 = value.replace(/^(\"|\')|(\"|\')$|^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]\s*$/ig, "");
-    const tmp2 = tmp1.replace(/\s*(\'|\")\s*\,\s*(\'|\")\s*/ig, ",");
-    const tmp3 = tmp2.replace(/\s+\,|\,\s+/ig, " ");
-    const tmp4 = tmp3.split(",");
-    return tmp4;
-};
 exports.default = RecommendGuest;

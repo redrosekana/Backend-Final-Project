@@ -1,5 +1,5 @@
 // import library
-import express, { Router} from "express"
+import express, { Router , Request, Response } from "express"
 
 // import functional
 import Register from "../function/register"
@@ -19,6 +19,12 @@ import checkUser from "../middleware/check-user"
 import checkRefreshToken from "../middleware/check-refreshToken"
 
 const router:Router = express.Router()
+
+// your welcome
+router.get("/",(req:Request,res:Response) => {
+    res.status(200).json({message:"Hello Your Welcome to Api Boardgame Recommu"})
+})
+
 router.post("/register",Register)
 router.post("/login",Login)
 router.post("/email",Email)
