@@ -27,6 +27,7 @@ async function BoardGames(req:Request, res:Response){
 }
 
 // |(^\[\'|\'\]$)|(^\[\"|\"\]$)
+// hello world
 const convertStringToArray = (value:string):string[] => {
     const tmp1 = value.replace(/(^(\"|\')|(\"|\')$)|(^\[\s*(\'|\")\s*|\s*(\'|\")\s*\]$)/ig,"")
     const tmp2 = tmp1.replace(/(\'|\")\s*\,\s*(\'|\")/ig,",")
