@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//* import library
+// import library
 const mongoose_1 = require("mongoose");
 const facebookMemberSchema = new mongoose_1.Schema({
     facebookId: { type: String },

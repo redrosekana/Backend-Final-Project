@@ -10,8 +10,8 @@ import ManageFacebook from "../function/manageFacebook"
 import Email from "../function/email"
 import VerifyEmail from "../function/verifyEmail"
 import UpdatePassword from "../function/updatePassword"
-import BoardGames from "../function/BoardGames"
 import RecommendGuest from "../function/recommendGuest"
+import BoardGames from "../function/boardGames"
 
 // import middleware
 import checkAccessToken from "../middleware/check-accessToken"
