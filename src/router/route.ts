@@ -11,7 +11,7 @@ import Email from "../function/email"
 import VerifyEmail from "../function/verifyEmail"
 import UpdatePassword from "../function/updatePassword"
 import RecommendGuest from "../function/recommendGuest"
-import BoardGames from "../function/BoardGames"
+import BoardGame from "../function/BoardGame"
 import PopularBoardGame from "../function/popularBoardGame"
 
 // import middleware
@@ -36,7 +36,7 @@ router.get("/user",checkAccessToken,checkUser,Game)
 router.get("/renew",checkRefreshToken,RenewToken)
 router.post("/facebook",ManageFacebook)
 
-router.get("/boardgames",BoardGames)
+router.get("/boardgames",BoardGame)
 router.get("/guest",RecommendGuest)
 router.get("/popular",PopularBoardGame)
 

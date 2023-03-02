@@ -10,7 +10,7 @@ import Boardgames from "../model/boardgames"
 // import helper
 import { convertStringToArray } from "../helper/convertStringToArray"
 
-async function BoardGames(req:Request, res:Response){
+async function BoardGame(req:Request, res:Response){
     try {
         fs.createReadStream(path.resolve(__dirname,"../../public/csv/games-cleaned.csv"))
         .pipe(csv())
@@ -28,4 +28,4 @@ async function BoardGames(req:Request, res:Response){
         res.status(500).json({message:"occurred error in server"})
     }
 }
-export default BoardGames
+export default BoardGame

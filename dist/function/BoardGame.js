@@ -42,7 +42,7 @@ const fs = __importStar(require("fs"));
 const boardgames_1 = __importDefault(require("../model/boardgames"));
 // import helper
 const convertStringToArray_1 = require("../helper/convertStringToArray");
-function BoardGames(req, res) {
+function BoardGame(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             fs.createReadStream(path.resolve(__dirname, "../../public/csv/games-cleaned.csv"))
@@ -63,4 +63,4 @@ function BoardGames(req, res) {
         }
     });
 }
-exports.default = BoardGames;
+exports.default = BoardGame;
