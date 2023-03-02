@@ -11,7 +11,7 @@ import Email from "../function/email"
 import VerifyEmail from "../function/verifyEmail"
 import UpdatePassword from "../function/updatePassword"
 import RecommendGuest from "../function/recommendGuest"
-import BoardGames from "../function/boardGames"
+import BoardGames from "../function/BoardGames"
 
 // import middleware
 import checkAccessToken from "../middleware/check-accessToken"
