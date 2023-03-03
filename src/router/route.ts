@@ -13,6 +13,7 @@ import UpdatePassword from "../function/updatePassword"
 import RecommendGuest from "../function/recommendGuest"
 import BoardGame from "../function/BoardGame"
 import PopularBoardGame from "../function/popularBoardGame"
+import InformationAllBoardGame from "../function/informationAllBoardGame"
 
 // import middleware
 import checkAccessToken from "../middleware/check-accessToken"
@@ -39,6 +40,7 @@ router.post("/facebook",ManageFacebook)
 router.get("/boardgames",BoardGame)
 router.get("/guest",RecommendGuest)
 router.get("/popular",PopularBoardGame)
+router.get("/information",InformationAllBoardGame)
 
 
 export default router

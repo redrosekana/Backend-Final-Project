@@ -17,6 +17,7 @@ const updatePassword_1 = __importDefault(require("../function/updatePassword"));
 const recommendGuest_1 = __importDefault(require("../function/recommendGuest"));
 const BoardGame_1 = __importDefault(require("../function/BoardGame"));
 const popularBoardGame_1 = __importDefault(require("../function/popularBoardGame"));
+const informationAllBoardGame_1 = __importDefault(require("../function/informationAllBoardGame"));
 // import middleware
 const check_accessToken_1 = __importDefault(require("../middleware/check-accessToken"));
 const check_user_1 = __importDefault(require("../middleware/check-user"));
@@ -37,4 +38,5 @@ router.post("/facebook", manageFacebook_1.default);
 router.get("/boardgames", BoardGame_1.default);
 router.get("/guest", recommendGuest_1.default);
 router.get("/popular", popularBoardGame_1.default);
+router.get("/information", informationAllBoardGame_1.default);
 exports.default = router;
