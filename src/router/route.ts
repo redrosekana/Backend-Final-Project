@@ -14,7 +14,7 @@ import UpdatePassword from "../function/updatePassword"
 import UpdateUserMember from "../function/updateUserMember"
 import RecommendGuest from "../function/recommendGuest"
 
-import BoardGames from "../function/boardGame"
+import BoardGames from "../function/boardGames"
 import PopularBoardGame from "../function/popularBoardGame"
 
 
