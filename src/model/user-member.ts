@@ -20,6 +20,6 @@ const userMemberSchema = new Schema<UserMemeberInterfaceModel>({
       lon:{type:String},
 })
 
-const User_member = model<UserMemeberInterfaceModel>("user-member",userMemberSchema)
+const user_members = model<UserMemeberInterfaceModel>("user-member",userMemberSchema)
 
-export default User_member
+export default user_members

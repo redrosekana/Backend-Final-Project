@@ -8,21 +8,15 @@ import * as fs from "fs"
 // import model
 import User_member from "../model/user-member";
 
-// function check valid email
-function ValidateEmail(email:string) {
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-    return (true)
-  }else {
-    return (false)
-  }
-}
+// import helper
+import { ValidateEmail } from "../helper/validateEmail";
 
-async function Email(req:Request , res:Response) {
+export default async function SendEmail(req:Request , res:Response) {
     const password_email:string = process.env.PASSWORD_EMAIL as string
     const secret_waitemail:string = process.env.SECRET_WAITEMAIL as string
     const url_frontend:string = process.env.URL_FRONTEND as string
 
-    const { email} = req.body
+    const { email } = req.body
     
     if (!email) {
         res.status(400).json({
@@ -34,7 +28,7 @@ async function Email(req:Request , res:Response) {
         })
     }else {
         try {
-            const result = await User_member.findOne({email:{$eq:email}})
+            const result = await User_member.findOne({email:{$eq:email.trim()}})
             
             if (!result) {
                 res.status(400).json({
@@ -52,25 +46,25 @@ async function Email(req:Request , res:Response) {
                     logger: true
                 });
     
-                const payload = {email:email}
+                const payload = { email:email }
 
                 const token = jwt.sign(payload,secret_waitemail,{
                     algorithm:"HS256",
                     expiresIn:"300000ms"
                 })
                 const htmlString:string = ejs.render(fs.readFileSync('./views/index.ejs', 'utf8'),{
-                    "link":`<a class='btn' href='${url_frontend}?token=${token}'>ยืนยันตัวตน</a>`
+                    link:`<a class='btn' href='${url_frontend}?token=${token}'>ยืนยันตัวตน</a>`
                 })
                 
                 const info = {
-                    from: '"Sukachathum" <sukachathum.s@ku.th>',
+                    from: '"Boardgame recommu" <sukachathum.s@ku.th>',
                     to: `'Customer' <${email}>`,
                     subject: "Reset Password",
                     date:new Date(),
                     html: htmlString,
                 }
                 
-                transporter.sendMail(info,(err,result) => {
+                transporter.sendMail(info,(err) => {
                     if (err) {
                         res.status(500).json({
                             message:"occur error make to can't send email"
@@ -89,5 +83,3 @@ async function Email(req:Request , res:Response) {
         }
     }
 }
-
-export default Email

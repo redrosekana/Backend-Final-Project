@@ -8,23 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-// import model
-const recommend_guest_1 = __importDefault(require("../model/recommend-guest"));
-function BoardGames(req, res) {
+function Member(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const data = yield recommend_guest_1.default.find({});
-            const result = data.map(e => e.game);
-            res.status(200).json(result);
-        }
-        catch (err) {
-            console.log(err);
-            res.status(500).json({ message: "occurred error in server" });
-        }
+        res.status(200).json(Object.assign({ "message": "boardgame popular" }, req["user"]));
     });
 }
-exports.default = BoardGames;
+exports.default = Member;

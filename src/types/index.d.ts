@@ -3,7 +3,7 @@ declare global {
   namespace Express {
     export interface Request {
       payload?: any,
-      proflie?: any,
+      user?: any,
     }
   }
 }

@@ -10,17 +10,12 @@ interface PopularBoardGameItem {
     year:string
 }
 
-async function PopularBoardGame(req:Request , res:Response) {
+export default async function PopularBoardGame(req:Request , res:Response) {
     const resultPopularBoardGame:PopularBoardGameItem[] = []
-    const url = process.env.API_POPULARBOARDGAME
+    const url:string = process.env.API_POPULARBOARDGAME as string
     
     try {   
-        const result = await axios({
-            url:url,
-            method:"get",
-            timeout:20000
-        })
-        
+        const result = await axios.get(url)
         const jsonObject = convert.xml2js(result.data)
 
         for (let i=0;i<jsonObject.elements[0].elements.length;i++) {
@@ -41,5 +36,3 @@ async function PopularBoardGame(req:Request , res:Response) {
         res.status(500).json({meesage:"occurred error in server"})
     }
 }
-
-export default PopularBoardGame

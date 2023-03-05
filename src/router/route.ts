@@ -4,16 +4,19 @@ import express, { Router , Request, Response } from "express"
 // import functional
 import Register from "../function/register"
 import Login from "../function/login"
-import Game from "../function/game"
+import Member from "../function/member"
 import RenewToken from "../function/renewToken"
-import ManageFacebook from "../function/manageFacebook"
-import Email from "../function/email"
+import Facebook from "../function/facebook"
+import SendEmail from "../function/sendEmail"
 import VerifyEmail from "../function/verifyEmail"
+import ResetPassword from "../function/resetPassword"
 import UpdatePassword from "../function/updatePassword"
+import UpdateUserMember from "../function/updateUserMember"
 import RecommendGuest from "../function/recommendGuest"
-import BoardGame from "../function/BoardGame"
+
+import BoardGames from "../function/boardGame"
 import PopularBoardGame from "../function/popularBoardGame"
-import InformationAllBoardGame from "../function/informationAllBoardGame"
+
 
 // import middleware
 import checkAccessToken from "../middleware/check-accessToken"
@@ -29,18 +32,21 @@ router.get("/",(req:Request,res:Response) => {
 
 router.post("/register",Register)
 router.post("/login",Login)
-router.post("/email",Email)
+router.post("/email",SendEmail)
 router.get("/email",VerifyEmail)
-router.post("/password",UpdatePassword)
+router.post("/password",ResetPassword)
 
-router.get("/user",checkAccessToken,checkUser,Game)
-router.get("/renew",checkRefreshToken,RenewToken)
-router.post("/facebook",ManageFacebook)
+router.post("/auth/password",checkAccessToken,checkUser,UpdatePassword)
+router.patch("/auth/user/member",checkAccessToken,checkUser,UpdateUserMember)
 
-router.get("/boardgames",BoardGame)
+router.get("/member",checkAccessToken,checkUser,Member)
+router.get("/token",checkRefreshToken,RenewToken)
+router.post("/facebook",Facebook)
+
+
 router.get("/guest",RecommendGuest)
 router.get("/popular",PopularBoardGame)
-router.get("/information",InformationAllBoardGame)
+router.get("/boardgames",BoardGames)
 
 
 export default router

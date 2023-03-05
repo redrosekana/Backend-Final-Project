@@ -10,16 +10,16 @@ export default async function checkUser(req:Request , res:Response , next:NextFu
     
     try {
         if (selectUser.username) {
-            const result = await User_member.findOne({"username":selectUser.username})
-            req.proflie = {
+            const result = await User_member.findOne({username:selectUser.username})
+            req.user = {
                 displayName:result?.displayName,
                 username:result?.username,
                 email:result?.email
             }
             next()
         }else {
-            const result = await Facebook_member.findOne({"facebookName":selectUser.facebookName})
-            req.proflie = {
+            const result = await Facebook_member.findOne({facebookName:selectUser.facebookName})
+            req.user = {
                 "displayName":(result?.displayName ? result?.displayName : "guest"),
                 "facebookId":result?.facebookId,
                 "facebookName":result?.facebookName

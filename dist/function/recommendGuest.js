@@ -21,31 +21,41 @@ function RecommendGuest(req, res) {
         const ResultBoardGameRecommend = [];
         let relationBoardGame = [];
         // ดึงค่าที่ส่งมา
-        const boardgameName = req.query.boardgameName;
+        const { boardgameName } = req.query;
         if (!boardgameName) {
             res.status(400).json({ message: "need a boardgameName field" });
         }
         else {
             try {
-                const tmp = yield recommend_guest_1.default.find({ game: { $eq: boardgameName } });
-                relationBoardGame = [...tmp[0].recommend];
-                for (let i = 0; i < relationBoardGame.length; i++) {
-                    const information = yield boardgames_1.default.findOne({ name: { $eq: relationBoardGame[i] } });
-                    if (!!information) {
-                        const body = {
-                            id: information.id,
-                            name: information.name,
-                            minPlayers: information.minplayers,
-                            maxPlayers: information.maxplayers,
-                            playingtime: information.playingtime,
-                            yearpublished: information.yearpublished,
-                            description: information.description,
-                            image: information.image
-                        };
-                        ResultBoardGameRecommend.push(body);
-                    }
+                const boardgame = yield recommend_guest_1.default.findOne({ game: { $eq: boardgameName } });
+                if (!boardgame) {
+                    res.send(400).json({ message: "don't exist boardgame in database" });
                 }
-                res.status(200).json(ResultBoardGameRecommend);
+                else {
+                    relationBoardGame = [...boardgame["recommend"]];
+                    const currentData = yield boardgames_1.default.findOne({ name: { $eq: boardgame.game } }).select("-_id id name minplayers maxplayers playingtime yearpublished description image");
+                    for (let i = 0; i < relationBoardGame.length; i++) {
+                        const information = yield boardgames_1.default.findOne({ name: { $eq: relationBoardGame[i] } }).select("-_id id name minplayers maxplayers playingtime yearpublished description image");
+                        if (!!information) {
+                            const body = {
+                                id: information.id,
+                                name: information.name,
+                                minplayers: information.minplayers,
+                                maxplayers: information.maxplayers,
+                                playingtime: information.playingtime,
+                                yearpublished: information.yearpublished,
+                                description: information.description,
+                                image: information.image
+                            };
+                            ResultBoardGameRecommend.push(body);
+                        }
+                    }
+                    const result = {
+                        currentData: currentData,
+                        recommend: ResultBoardGameRecommend
+                    };
+                    res.status(200).json(result);
+                }
             }
             catch (err) {
                 console.log(err);
@@ -55,10 +65,3 @@ function RecommendGuest(req, res) {
     });
 }
 exports.default = RecommendGuest;
-// ส่วนที่ใช้อ่านไฟล์ csv มาเก็บในฐานข้อมูล
-// fs.createReadStream(path.resolve(__dirname,"../../public/csv/item-based.csv"))
-// .pipe(csv())
-// .on('data', async (data) => {
-//     data.recommend = convertStringToArray(data.recommend)
-//     await Recommend_guest.create(data)
-// })

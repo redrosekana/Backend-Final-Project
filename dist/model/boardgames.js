@@ -23,5 +23,5 @@ const boardgamesSchema = new mongoose_1.Schema({
     description: { type: String },
     image: { type: String },
 });
-const Boardgames = (0, mongoose_1.model)("boardgames", boardgamesSchema);
-exports.default = Boardgames;
+const boardgames = (0, mongoose_1.model)("boardgames", boardgamesSchema);
+exports.default = boardgames;

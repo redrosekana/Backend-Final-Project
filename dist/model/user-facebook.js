@@ -9,5 +9,5 @@ const facebookMemberSchema = new mongoose_1.Schema({
     lat: { type: String },
     lon: { type: String },
 });
-const Facebook_member = (0, mongoose_1.model)("facebook-member", facebookMemberSchema);
-exports.default = Facebook_member;
+const facebook_members = (0, mongoose_1.model)("facebook-member", facebookMemberSchema);
+exports.default = facebook_members;

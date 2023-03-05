@@ -2,66 +2,71 @@
 import { Request, Response } from "express"
 
 // import model
-import Recommend_guest from "../model/recommend-guest"
-import Boardgames from "../model/boardgames"
+import recommend_guests from "../model/recommend-guest"
+import boardgames from "../model/boardgames"
 
 // declare interface for ResultBoardGameRecommend
 interface ResultBoardGameRecommendProps {
     id:string
     name:string
-    minPlayers:number
-    maxPlayers:number
+    minplayers:number
+    maxplayers:number
     playingtime:number
     yearpublished:number
     description:string
     image:string
 }
 
-async function RecommendGuest(req:Request, res:Response){
+export default async function RecommendGuest(req:Request, res:Response){
     // ประกาศตัวแปรเก็บข้อมูลเกมที่จะแสดง
-    const ResultBoardGameRecommend:ResultBoardGameRecommendProps[] = []
+    const ResultBoardGameRecommend:any[] = []
     let relationBoardGame:string[] = []
 
     // ดึงค่าที่ส่งมา
-    const boardgameName = req.query.boardgameName
+    const { boardgameName } = req.query
     
     if (!boardgameName) {
         res.status(400).json({message:"need a boardgameName field"})
     }else {
         try {
-            const tmp = await Recommend_guest.find({game:{$eq:boardgameName}})
-            relationBoardGame = [...tmp[0].recommend]
-            for (let i=0;i<relationBoardGame.length;i++) {
-                const information = await Boardgames.findOne({name:{$eq:relationBoardGame[i]}})
+            const boardgame = await recommend_guests.findOne({game:{$eq:boardgameName}})
+            
+            if (!boardgame) {
+                res.send(400).json({message:"don't exist boardgame in database"})
+            }else {
+                relationBoardGame = [...boardgame["recommend"]]
+                const currentData = await boardgames.findOne({name:{$eq:boardgame.game}}).select("-_id id name minplayers maxplayers playingtime yearpublished description image")
                 
-                if (!!information) {
-                    const body:ResultBoardGameRecommendProps = {
-                        id:information!.id,
-                        name:information!.name,
-                        minPlayers:information!.minplayers,
-                        maxPlayers:information!.maxplayers,
-                        playingtime:information!.playingtime,
-                        yearpublished:information!.yearpublished,
-                        description:information!.description,
-                        image:information!.image
+                for (let i=0;i<relationBoardGame.length;i++) {
+                    const information = await boardgames.findOne({name:{$eq:relationBoardGame[i]}}).select("-_id id name minplayers maxplayers playingtime yearpublished description image")
+                    
+                    if (!!information) {
+                        const body:ResultBoardGameRecommendProps = {
+                            id:information!.id,
+                            name:information!.name,
+                            minplayers:information!.minplayers,
+                            maxplayers:information!.maxplayers,
+                            playingtime:information!.playingtime,
+                            yearpublished:information!.yearpublished,
+                            description:information!.description,
+                            image:information!.image
+                        }
+                        ResultBoardGameRecommend.push(body)
                     }
-                    ResultBoardGameRecommend.push(body)
                 }
+
+                const result = {
+                    currentData:currentData,
+                    recommend:ResultBoardGameRecommend
+                }
+
+                res.status(200).json(result)
             }
-            res.status(200).json(ResultBoardGameRecommend)
+
+            
         }catch(err) {
             console.log(err)
             res.status(500).json({message:"occurred error in server"})
         }
     }
 }
-
-export default RecommendGuest
-
-// ส่วนที่ใช้อ่านไฟล์ csv มาเก็บในฐานข้อมูล
-// fs.createReadStream(path.resolve(__dirname,"../../public/csv/item-based.csv"))
-// .pipe(csv())
-// .on('data', async (data) => {
-//     data.recommend = convertStringToArray(data.recommend)
-//     await Recommend_guest.create(data)
-// })

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken"
 
 // import model
-import User_member from "../model/user-member"
+import user_members from "../model/user-member"
 
 export default async function Login(req:Request ,res:Response){
     const {username , password} = req.body
@@ -13,12 +13,12 @@ export default async function Login(req:Request ,res:Response){
         res.status(400).json({message:"need input username and password"})
     }else{
         try {
-            const existUser = await User_member.findOne({username:{$eq:username}})
+            const existUser = await user_members.findOne({username:{$eq:username.trim()}})
             
             if (!existUser) {
                 res.status(400).json({message:"don't exist user in database"})
             }else {
-                const hashPassword = existUser.password
+                const hashPassword:string = existUser.password
                 const checkPassword:boolean = await bcrypt.compare(String(password),hashPassword)
                 
                 if (!checkPassword) {
@@ -35,16 +35,14 @@ export default async function Login(req:Request ,res:Response){
                         algorithm:"HS256",
                         expiresIn: "1800000ms"
                     })
-                    //"10000ms"
-                    //"1800000ms"
+                    
                     const refreshToken = jwt.sign(payload,secret_refreshToken,{
                         algorithm:"HS256",
                         expiresIn: "2700000ms"
                     })
-                    //"20000ms"
-                    //"2700000ms"
+                    
                     res.status(200).json({
-                        message:"login success",
+                        message:"success login",
                         accessToken:accessToken,
                         refreshToken:refreshToken
                     })
@@ -56,3 +54,11 @@ export default async function Login(req:Request ,res:Response){
         }
     }
 }
+
+// สำหรับ accessToken
+//"10000ms"
+//"1800000ms"
+
+// สำหรับ refreshToken
+//"20000ms"
+//"2700000ms"

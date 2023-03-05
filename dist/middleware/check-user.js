@@ -20,8 +20,8 @@ function checkUser(req, res, next) {
         const selectUser = req.payload;
         try {
             if (selectUser.username) {
-                const result = yield user_member_1.default.findOne({ "username": selectUser.username });
-                req.proflie = {
+                const result = yield user_member_1.default.findOne({ username: selectUser.username });
+                req.user = {
                     displayName: result === null || result === void 0 ? void 0 : result.displayName,
                     username: result === null || result === void 0 ? void 0 : result.username,
                     email: result === null || result === void 0 ? void 0 : result.email
@@ -29,8 +29,8 @@ function checkUser(req, res, next) {
                 next();
             }
             else {
-                const result = yield user_facebook_1.default.findOne({ "facebookName": selectUser.facebookName });
-                req.proflie = {
+                const result = yield user_facebook_1.default.findOne({ facebookName: selectUser.facebookName });
+                req.user = {
                     "displayName": ((result === null || result === void 0 ? void 0 : result.displayName) ? result === null || result === void 0 ? void 0 : result.displayName : "guest"),
                     "facebookId": result === null || result === void 0 ? void 0 : result.facebookId,
                     "facebookName": result === null || result === void 0 ? void 0 : result.facebookName

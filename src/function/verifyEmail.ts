@@ -8,8 +8,7 @@ export default function VerifyEmail(req:Request, res:Response) {
     const { token } = req.query
     
     try {
-        const decode = jwt.verify(token as string,secret_waitemail)
-        
+        jwt.verify(token as string,secret_waitemail)
         res.status(200).json({message:"ok"})
     }catch(err:any) {
         if (err.message === "invalid signature") {

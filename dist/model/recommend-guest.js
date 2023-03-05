@@ -6,5 +6,5 @@ const recommendGuestSchema = new mongoose_1.Schema({
     game: { type: String },
     recommend: { type: [String] }
 });
-const Recommend_guest = (0, mongoose_1.model)("recommend-guest", recommendGuestSchema);
-exports.default = Recommend_guest;
+const recommend_guests = (0, mongoose_1.model)("recommend-guest", recommendGuestSchema);
+exports.default = recommend_guests;

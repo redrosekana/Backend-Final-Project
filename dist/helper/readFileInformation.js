@@ -35,30 +35,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt = __importStar(require("bcrypt"));
-// import model 
-const user_member_1 = __importDefault(require("../model/user-member"));
-function UpdatePassword(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { password } = req.body;
-        if (!password) {
-            res.status(400).json({ message: "need password" });
-        }
-        else {
-            try {
-                const saltRounds = Number(process.env.SALTROUNDS);
-                const hashPassword = yield bcrypt.hash(String(password), saltRounds);
-                const result = req.user;
-                const member = yield user_member_1.default.findOne({ username: { $eq: result.username } });
-                yield user_member_1.default.findByIdAndUpdate(member === null || member === void 0 ? void 0 : member._id, { password: hashPassword });
-                res.status(200).json({ message: "success change a user password" });
-            }
-            catch (err) {
-                res.status(500).json({
-                    "message": "occurred error in server"
-                });
-            }
-        }
-    });
-}
-exports.default = UpdatePassword;
+exports.ReadFileItemBased = exports.ReadFileGamesCleaned = void 0;
+// import library
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
+const csv_parser_1 = __importDefault(require("csv-parser"));
+// import helper
+const convertStringToArray_1 = require("./convertStringToArray");
+// import model
+const boardgames_1 = __importDefault(require("../model/boardgames"));
+const recommend_guest_1 = __importDefault(require("../model/recommend-guest"));
+// สำหรับอ่านไฟล์ games-cleaned.csv
+const ReadFileGamesCleaned = () => {
+    fs.createReadStream(path.resolve(__dirname, "../../public/csv/games-cleaned.csv"))
+        .pipe((0, csv_parser_1.default)())
+        .on('data', (data) => __awaiter(void 0, void 0, void 0, function* () {
+        data.category = (0, convertStringToArray_1.convertStringToArray)(data.category);
+        data.mechanic = (0, convertStringToArray_1.convertStringToArray)(data.mechanic);
+        data.designer = (0, convertStringToArray_1.convertStringToArray)(data.designer);
+        data.artist = (0, convertStringToArray_1.convertStringToArray)(data.artist);
+        data.publisher = (0, convertStringToArray_1.convertStringToArray)(data.publisher);
+        yield boardgames_1.default.create(data);
+    }));
+};
+exports.ReadFileGamesCleaned = ReadFileGamesCleaned;
+// สำหรับอ่านไฟล์ item-based.csv
+const ReadFileItemBased = () => {
+    fs.createReadStream(path.resolve(__dirname, "../../public/csv/item-based.csv"))
+        .pipe((0, csv_parser_1.default)())
+        .on('data', (data) => __awaiter(void 0, void 0, void 0, function* () {
+        data.recommend = (0, convertStringToArray_1.convertStringToArray)(data.recommend);
+        yield recommend_guest_1.default.create(data);
+    }));
+};
+exports.ReadFileItemBased = ReadFileItemBased;

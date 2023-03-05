@@ -23,26 +23,26 @@ function Register(req, res) {
         }
         else {
             try {
-                const repeatdisplayName = yield user_member_1.default.find({ displayName: displayName.trim() });
-                const repeatUsername = yield user_member_1.default.find({ username: username.trim() });
-                const repeatEmail = yield user_member_1.default.find({ email: email.trim() });
-                if (repeatdisplayName.length > 0) {
+                const repeatdisplayName = yield user_member_1.default.findOne({ displayName: displayName.trim() });
+                const repeatUsername = yield user_member_1.default.findOne({ username: username.trim() });
+                const repeatEmail = yield user_member_1.default.findOne({ email: email.trim() });
+                if (repeatdisplayName) {
                     res.status(400).json({ message: "displayName repeated" });
                 }
-                else if (repeatUsername.length > 0) {
+                else if (repeatUsername) {
                     res.status(400).json({ message: "username repeated" });
                 }
-                else if (repeatEmail.length > 0) {
+                else if (repeatEmail) {
                     res.status(400).json({ message: "email repeated" });
                 }
                 else {
                     const saltRounds = Number(process.env.SALTROUNDS);
                     const hashPassword = yield bcrypt_1.default.hash(String(password), saltRounds);
                     const user = {
-                        "displayName": displayName.trim(),
-                        "username": username.trim(),
-                        "password": hashPassword.trim(),
-                        "email": email.trim()
+                        displayName: displayName.trim(),
+                        username: username.trim(),
+                        password: hashPassword.trim(),
+                        email: email.trim()
                     };
                     yield user_member_1.default.create(user);
                     res.status(200).json({ message: "register success" });

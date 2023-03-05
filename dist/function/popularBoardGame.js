@@ -19,11 +19,7 @@ function PopularBoardGame(req, res) {
         const resultPopularBoardGame = [];
         const url = process.env.API_POPULARBOARDGAME;
         try {
-            const result = yield (0, axios_1.default)({
-                url: url,
-                method: "get",
-                timeout: 20000
-            });
+            const result = yield axios_1.default.get(url);
             const jsonObject = xml_js_1.default.xml2js(result.data);
             for (let i = 0; i < jsonObject.elements[0].elements.length; i++) {
                 // เอาแค่ 10 อันดับ

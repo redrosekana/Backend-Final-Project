@@ -35,62 +35,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt = __importStar(require("jsonwebtoken"));
+const bcrypt = __importStar(require("bcrypt"));
 // import model
 const user_member_1 = __importDefault(require("../model/user-member"));
-function Login(req, res) {
+function ResetPassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            res.status(400).json({ message: "need input username and password" });
+        const secret_wait_email = process.env.SECRET_WAITEMAIL;
+        const { password, token } = req.body;
+        if (!password || !token) {
+            res.status(400).json({
+                message: "need password and token"
+            });
         }
         else {
             try {
-                const existUser = yield user_member_1.default.findOne({ username: { $eq: username.trim() } });
-                if (!existUser) {
-                    res.status(400).json({ message: "don't exist user in database" });
-                }
-                else {
-                    const hashPassword = existUser.password;
-                    const checkPassword = yield bcrypt_1.default.compare(String(password), hashPassword);
-                    if (!checkPassword) {
-                        res.status(400).json({ message: "password invalid" });
-                    }
-                    else {
-                        const payload = {
-                            displayName: existUser.displayName,
-                            username: existUser.username
-                        };
-                        const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
-                        const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
-                        const accessToken = jwt.sign(payload, secret_accessToken, {
-                            algorithm: "HS256",
-                            expiresIn: "1800000ms"
-                        });
-                        const refreshToken = jwt.sign(payload, secret_refreshToken, {
-                            algorithm: "HS256",
-                            expiresIn: "2700000ms"
-                        });
-                        res.status(200).json({
-                            message: "success login",
-                            accessToken: accessToken,
-                            refreshToken: refreshToken
-                        });
-                    }
+                const decode = jwt.verify(token, secret_wait_email);
+                const payloadDecode = decode;
+                const saltRounds = Number(process.env.SALTROUNDS);
+                const hashPassword = yield bcrypt.hash(String(password), saltRounds);
+                if (typeof payloadDecode === "object") {
+                    const member = yield user_member_1.default.findOne({ email: { $eq: payloadDecode.email } });
+                    yield user_member_1.default.findByIdAndUpdate(String(member === null || member === void 0 ? void 0 : member._id), { password: hashPassword });
+                    res.status(200).json({
+                        "message": "update password success"
+                    });
                 }
             }
             catch (err) {
-                console.log(err);
-                res.status(500).json({ "message": "occurred error in server" });
+                if (err.message === "jwt expired") {
+                    res.status(400).json({
+                        "message": "jwt expired token"
+                    });
+                }
+                else {
+                    res.status(500).json({
+                        "message": "occurred error in server"
+                    });
+                }
             }
         }
     });
 }
-exports.default = Login;
-// สำหรับ accessToken
-//"10000ms"
-//"1800000ms"
-// สำหรับ refreshToken
-//"20000ms"
-//"2700000ms"
+exports.default = ResetPassword;

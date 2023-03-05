@@ -10,5 +10,5 @@ const userMemberSchema = new mongoose_1.Schema({
     lat: { type: String },
     lon: { type: String },
 });
-const User_member = (0, mongoose_1.model)("user-member", userMemberSchema);
-exports.default = User_member;
+const user_members = (0, mongoose_1.model)("user-member", userMemberSchema);
+exports.default = user_members;

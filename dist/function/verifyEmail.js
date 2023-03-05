@@ -28,7 +28,7 @@ function VerifyEmail(req, res) {
     const secret_waitemail = process.env.SECRET_WAITEMAIL;
     const { token } = req.query;
     try {
-        const decode = jwt.verify(token, secret_waitemail);
+        jwt.verify(token, secret_waitemail);
         res.status(200).json({ message: "ok" });
     }
     catch (err) {

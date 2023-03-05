@@ -35,59 +35,57 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt = __importStar(require("jsonwebtoken"));
+const axios_1 = __importDefault(require("axios"));
 // import model
-const user_member_1 = __importDefault(require("../model/user-member"));
-function Login(req, res) {
+const user_facebook_1 = __importDefault(require("../model/user-facebook"));
+function Facebook(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            res.status(400).json({ message: "need input username and password" });
+        const { userId, accessTokenFacebook } = req.body;
+        if (!userId || !accessTokenFacebook) {
+            res.status(400).json({
+                "message": "need userId and accessTokenFacebook"
+            });
         }
         else {
+            const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
+            const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
             try {
-                const existUser = yield user_member_1.default.findOne({ username: { $eq: username.trim() } });
+                const result = yield axios_1.default.get(`https://graph.facebook.com/v4.0/${userId}?fields=id,name,email&access_token=${accessTokenFacebook}`);
+                const facebookId = result.data.id;
+                const facebookName = result.data.name;
+                const existUser = yield user_facebook_1.default.findOne({ facebookId: { $eq: facebookId } });
                 if (!existUser) {
-                    res.status(400).json({ message: "don't exist user in database" });
+                    yield user_facebook_1.default.create({
+                        facebookId: facebookId,
+                        facebookName: facebookName
+                    });
                 }
-                else {
-                    const hashPassword = existUser.password;
-                    const checkPassword = yield bcrypt_1.default.compare(String(password), hashPassword);
-                    if (!checkPassword) {
-                        res.status(400).json({ message: "password invalid" });
-                    }
-                    else {
-                        const payload = {
-                            displayName: existUser.displayName,
-                            username: existUser.username
-                        };
-                        const secret_accessToken = process.env.SECRET_ACCESSTOKEN;
-                        const secret_refreshToken = process.env.SECRET_REFRESHTOKEN;
-                        const accessToken = jwt.sign(payload, secret_accessToken, {
-                            algorithm: "HS256",
-                            expiresIn: "1800000ms"
-                        });
-                        const refreshToken = jwt.sign(payload, secret_refreshToken, {
-                            algorithm: "HS256",
-                            expiresIn: "2700000ms"
-                        });
-                        res.status(200).json({
-                            message: "success login",
-                            accessToken: accessToken,
-                            refreshToken: refreshToken
-                        });
-                    }
-                }
+                const payload = { facebookName };
+                const accessToken = jwt.sign(payload, secret_accessToken, {
+                    algorithm: "HS256",
+                    expiresIn: "1800000ms"
+                });
+                const refreshToken = jwt.sign(payload, secret_refreshToken, {
+                    algorithm: "HS256",
+                    expiresIn: "2700000ms"
+                });
+                res.status(200).json({
+                    message: "success login facebook",
+                    accessToken,
+                    refreshToken
+                });
             }
             catch (err) {
                 console.log(err);
-                res.status(500).json({ "message": "occurred error in server" });
+                res.status(500).json({
+                    message: "occurred error in server"
+                });
             }
         }
     });
 }
-exports.default = Login;
+exports.default = Facebook;
 // สำหรับ accessToken
 //"10000ms"
 //"1800000ms"

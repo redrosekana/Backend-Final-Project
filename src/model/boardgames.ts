@@ -46,5 +46,5 @@ const boardgamesSchema = new Schema<BoardgamesInterfaceModel>({
     image:{type:String},
 })
 
-const Boardgames = model<BoardgamesInterfaceModel>("boardgames",boardgamesSchema)
-export default Boardgames
+const boardgames = model<BoardgamesInterfaceModel>("boardgames",boardgamesSchema)
+export default boardgames

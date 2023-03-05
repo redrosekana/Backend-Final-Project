@@ -18,5 +18,5 @@ const facebookMemberSchema = new Schema<FacebookMemeberInterfaceModel>({
       lon:{type:String},
 })
 
-const Facebook_member = model<FacebookMemeberInterfaceModel>("facebook-member",facebookMemberSchema)
-export default Facebook_member
+const facebook_members = model<FacebookMemeberInterfaceModel>("facebook-member",facebookMemberSchema)
+export default facebook_members

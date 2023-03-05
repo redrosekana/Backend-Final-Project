@@ -4,9 +4,9 @@ import * as jwt from "jsonwebtoken"
 import axios from "axios"
 
 // import model
-import Facebook_member from "../model/user-facebook";
+import facebook_members from "../model/user-facebook";
 
-export default async function ManageFacebook(req:Request, res:Response) {
+export default async function Facebook(req:Request, res:Response) {
     const {userId , accessTokenFacebook} = req.body
     
     if (!userId || !accessTokenFacebook){
@@ -23,10 +23,10 @@ export default async function ManageFacebook(req:Request, res:Response) {
             const facebookId = result.data.id
             const facebookName = result.data.name
 
-            const existUser = await Facebook_member.findOne({"facebookId":{$eq:facebookId}})
+            const existUser = await facebook_members.findOne({facebookId:{$eq:facebookId}})
             
             if (!existUser) {
-                await Facebook_member.create({
+                await facebook_members.create({
                     facebookId:facebookId,
                     facebookName:facebookName
                 })
@@ -38,8 +38,6 @@ export default async function ManageFacebook(req:Request, res:Response) {
                 algorithm:"HS256",
                 expiresIn: "1800000ms"
             })
-            //"10000ms"
-            //"1800000ms"
             const refreshToken = jwt.sign(payload,secret_refreshToken,{
                 algorithm:"HS256",
                 expiresIn: "2700000ms"
@@ -57,6 +55,12 @@ export default async function ManageFacebook(req:Request, res:Response) {
             })
         }   
     }
-    
-    
 }
+
+// สำหรับ accessToken
+//"10000ms"
+//"1800000ms"
+
+// สำหรับ refreshToken
+//"20000ms"
+//"2700000ms"

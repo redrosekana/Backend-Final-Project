@@ -13,5 +13,5 @@ const recommendGuestSchema = new Schema<RecommendGuestModel>({
 })
 
 
-const Recommend_guest = model<RecommendGuestModel>("recommend-guest",recommendGuestSchema)
-export default Recommend_guest
+const recommend_guests = model<RecommendGuestModel>("recommend-guest",recommendGuestSchema)
+export default recommend_guests

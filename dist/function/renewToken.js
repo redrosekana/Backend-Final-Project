@@ -44,14 +44,10 @@ function RenewToken(req, res) {
         algorithm: "HS256",
         expiresIn: "1800000ms"
     });
-    //"10000ms"
-    //"1800000ms"
     const refreshToken = jwt.sign(payload, secret_refreshToken, {
         algorithm: "HS256",
         expiresIn: "2700000ms"
     });
-    //"20000ms"
-    //"2700000ms"
     res.status(200).json({
         message: "renew token success",
         accessToken: accessToken,
@@ -59,3 +55,9 @@ function RenewToken(req, res) {
     });
 }
 exports.default = RenewToken;
+// สำหรับ accessToken
+//"10000ms"
+//"1800000ms"
+// สำหรับ refreshToken
+//"20000ms"
+//"2700000ms"
