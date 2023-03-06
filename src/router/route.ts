@@ -37,7 +37,7 @@ router.get("/email",VerifyEmail)
 router.post("/password",ResetPassword)
 
 router.post("/auth/password",checkAccessToken,checkUser,UpdatePassword)
-router.patch("/auth/user/member",checkAccessToken,checkUser,UpdateUserMember)
+router.patch("/auth/member",checkAccessToken,checkUser,UpdateUserMember)
 
 router.get("/member",checkAccessToken,checkUser,Member)
 router.get("/token",checkRefreshToken,RenewToken)

@@ -1,6 +1,5 @@
 // import library
 import { Request, Response } from "express";
-import * as jwt from "jsonwebtoken"
 import * as bcrypt from "bcrypt"
 
 // import model 
@@ -10,7 +9,7 @@ export default async function UpdatePassword(req:Request, res:Response) {
     const { oldPassword , newPassword } = req.body
 
     if (!oldPassword || !newPassword) {
-        res.status(400).json({message:"need password"})
+        res.status(400).json({message:"need password that will change"})
     }else {
         try {
             const saltRounds:number = Number(process.env.SALTROUNDS)

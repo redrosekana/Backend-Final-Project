@@ -5,6 +5,7 @@ import facebook_members from "../model/user-facebook";
 
 export default async function UpdateUserMember(req:Request, res:Response) {
     const { displayNameUser, email, displayNameFacebook } = req.body
+    console.log(displayNameUser, email)
 
     const information:any = req.user
 
