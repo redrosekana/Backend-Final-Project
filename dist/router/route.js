@@ -34,7 +34,7 @@ router.post("/email", sendEmail_1.default);
 router.get("/email", verifyEmail_1.default);
 router.post("/password", resetPassword_1.default);
 router.post("/auth/password", check_accessToken_1.default, check_user_1.default, updatePassword_1.default);
-router.patch("/auth/user/member", check_accessToken_1.default, check_user_1.default, updateUserMember_1.default);
+router.patch("/auth/member", check_accessToken_1.default, check_user_1.default, updateUserMember_1.default);
 router.get("/member", check_accessToken_1.default, check_user_1.default, member_1.default);
 router.get("/token", check_refreshToken_1.default, renewToken_1.default);
 router.post("/facebook", facebook_1.default);

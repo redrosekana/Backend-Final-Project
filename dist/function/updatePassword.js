@@ -42,7 +42,7 @@ function UpdatePassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { oldPassword, newPassword } = req.body;
         if (!oldPassword || !newPassword) {
-            res.status(400).json({ message: "need password" });
+            res.status(400).json({ message: "need password that will change" });
         }
         else {
             try {

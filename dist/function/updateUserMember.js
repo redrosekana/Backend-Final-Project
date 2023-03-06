@@ -17,6 +17,7 @@ const user_facebook_1 = __importDefault(require("../model/user-facebook"));
 function UpdateUserMember(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { displayNameUser, email, displayNameFacebook } = req.body;
+        console.log(displayNameUser, email);
         const information = req.user;
         try {
             if (information.username) {
