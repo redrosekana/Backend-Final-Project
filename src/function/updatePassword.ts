@@ -7,21 +7,26 @@ import * as bcrypt from "bcrypt"
 import user_members from "../model/user-member";
 
 export default async function UpdatePassword(req:Request, res:Response) {
-    const { password } = req.body
+    const { oldPassword , newPassword } = req.body
 
-    if (!password) {
+    if (!oldPassword || !newPassword) {
         res.status(400).json({message:"need password"})
     }else {
         try {
             const saltRounds:number = Number(process.env.SALTROUNDS)
-            const hashPassword = await bcrypt.hash(String(password),saltRounds)
-
+            const hashNewPassword = await bcrypt.hash(String(newPassword),saltRounds)
+            
             const result = req.user
             const member = await user_members.findOne({username:{$eq:result.username}})
-            await user_members.findByIdAndUpdate(member?._id,{password:hashPassword})
+            const compareOldPassword = await bcrypt.compare(String(oldPassword),member?.password as string)
             
-            res.status(200).json({message:"success change a user password"})
+            if (compareOldPassword) {
+                await user_members.findByIdAndUpdate(member?._id,{password:hashNewPassword})
             
+                res.status(200).json({message:"success change a user password"})
+            }else {
+                res.status(400).json({message:"old password invalid"})
+            }
         }catch(err:any) {
             res.status(500).json({
                 "message":"occurred error in server"

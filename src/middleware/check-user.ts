@@ -20,9 +20,9 @@ export default async function checkUser(req:Request , res:Response , next:NextFu
         }else {
             const result = await Facebook_member.findOne({facebookName:selectUser.facebookName})
             req.user = {
-                "displayName":(result?.displayName ? result?.displayName : "guest"),
-                "facebookId":result?.facebookId,
-                "facebookName":result?.facebookName
+                displayName:(result?.displayName ? result?.displayName : "guest"),
+                facebookId:result?.facebookId,
+                facebookName:result?.facebookName
             }
             next()
         }

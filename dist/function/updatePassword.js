@@ -40,18 +40,24 @@ const bcrypt = __importStar(require("bcrypt"));
 const user_member_1 = __importDefault(require("../model/user-member"));
 function UpdatePassword(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { password } = req.body;
-        if (!password) {
+        const { oldPassword, newPassword } = req.body;
+        if (!oldPassword || !newPassword) {
             res.status(400).json({ message: "need password" });
         }
         else {
             try {
                 const saltRounds = Number(process.env.SALTROUNDS);
-                const hashPassword = yield bcrypt.hash(String(password), saltRounds);
+                const hashNewPassword = yield bcrypt.hash(String(newPassword), saltRounds);
                 const result = req.user;
                 const member = yield user_member_1.default.findOne({ username: { $eq: result.username } });
-                yield user_member_1.default.findByIdAndUpdate(member === null || member === void 0 ? void 0 : member._id, { password: hashPassword });
-                res.status(200).json({ message: "success change a user password" });
+                const compareOldPassword = yield bcrypt.compare(String(oldPassword), member === null || member === void 0 ? void 0 : member.password);
+                if (compareOldPassword) {
+                    yield user_member_1.default.findByIdAndUpdate(member === null || member === void 0 ? void 0 : member._id, { password: hashNewPassword });
+                    res.status(200).json({ message: "success change a user password" });
+                }
+                else {
+                    res.status(400).json({ message: "old password invalid" });
+                }
             }
             catch (err) {
                 res.status(500).json({
