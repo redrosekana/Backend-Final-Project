@@ -11,6 +11,7 @@ interface ResultBoardGameRecommendProps {
     name:string
     minplayers:number
     maxplayers:number
+    minage:number
     playingtime:number
     yearpublished:number
     description:string
@@ -35,10 +36,10 @@ export default async function RecommendGuest(req:Request, res:Response){
                 res.send(400).json({message:"don't exist boardgame in database"})
             }else {
                 relationBoardGame = [...boardgame["recommend"]]
-                const currentData = await boardgames.findOne({name:{$eq:boardgame.game}}).select("-_id id name minplayers maxplayers playingtime yearpublished description image")
+                const currentData = await boardgames.findOne({name:{$eq:boardgame.game}}).select("-_id id name minplayers maxplayers playingtime minage yearpublished description image")
                 
                 for (let i=0;i<relationBoardGame.length;i++) {
-                    const information = await boardgames.findOne({name:{$eq:relationBoardGame[i]}}).select("-_id id name minplayers maxplayers playingtime yearpublished description image")
+                    const information = await boardgames.findOne({name:{$eq:relationBoardGame[i]}}).select("-_id id name minplayers maxplayers playingtime minage yearpublished description image")
                     
                     if (!!information) {
                         const body:ResultBoardGameRecommendProps = {
@@ -46,6 +47,7 @@ export default async function RecommendGuest(req:Request, res:Response){
                             name:information!.name,
                             minplayers:information!.minplayers,
                             maxplayers:information!.maxplayers,
+                            minage:information!.minage,
                             playingtime:information!.playingtime,
                             yearpublished:information!.yearpublished,
                             description:information!.description,

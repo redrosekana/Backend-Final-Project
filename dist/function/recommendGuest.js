@@ -33,15 +33,16 @@ function RecommendGuest(req, res) {
                 }
                 else {
                     relationBoardGame = [...boardgame["recommend"]];
-                    const currentData = yield boardgames_1.default.findOne({ name: { $eq: boardgame.game } }).select("-_id id name minplayers maxplayers playingtime yearpublished description image");
+                    const currentData = yield boardgames_1.default.findOne({ name: { $eq: boardgame.game } }).select("-_id id name minplayers maxplayers playingtime minage yearpublished description image");
                     for (let i = 0; i < relationBoardGame.length; i++) {
-                        const information = yield boardgames_1.default.findOne({ name: { $eq: relationBoardGame[i] } }).select("-_id id name minplayers maxplayers playingtime yearpublished description image");
+                        const information = yield boardgames_1.default.findOne({ name: { $eq: relationBoardGame[i] } }).select("-_id id name minplayers maxplayers playingtime minage yearpublished description image");
                         if (!!information) {
                             const body = {
                                 id: information.id,
                                 name: information.name,
                                 minplayers: information.minplayers,
                                 maxplayers: information.maxplayers,
+                                minage: information.minage,
                                 playingtime: information.playingtime,
                                 yearpublished: information.yearpublished,
                                 description: information.description,

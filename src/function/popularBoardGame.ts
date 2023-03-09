@@ -17,10 +17,10 @@ export default async function PopularBoardGame(req:Request , res:Response) {
     try {   
         const result = await axios.get(url)
         const jsonObject = convert.xml2js(result.data)
-
+        
         for (let i=0;i<jsonObject.elements[0].elements.length;i++) {
             // เอาแค่ 10 อันดับ
-            if (i === 10) break
+            if (i === 15) break
             const body:PopularBoardGameItem = {
                 name:jsonObject.elements[0].elements[i].elements[1].attributes.value,
                 picture:jsonObject.elements[0].elements[i].elements[0].attributes.value,

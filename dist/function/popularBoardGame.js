@@ -23,7 +23,7 @@ function PopularBoardGame(req, res) {
             const jsonObject = xml_js_1.default.xml2js(result.data);
             for (let i = 0; i < jsonObject.elements[0].elements.length; i++) {
                 // เอาแค่ 10 อันดับ
-                if (i === 10)
+                if (i === 15)
                     break;
                 const body = {
                     name: jsonObject.elements[0].elements[i].elements[1].attributes.value,
