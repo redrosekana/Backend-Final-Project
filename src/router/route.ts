@@ -43,7 +43,6 @@ router.get("/member",checkAccessToken,checkUser,Member)
 router.get("/token",checkRefreshToken,RenewToken)
 router.post("/facebook",Facebook)
 
-
 router.get("/guest",RecommendGuest)
 router.get("/popular",PopularBoardGame)
 router.get("/boardgames",BoardGames)

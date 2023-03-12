@@ -57,7 +57,7 @@ export default async function SendEmail(req:Request , res:Response) {
                 })
                 
                 const info = {
-                    from: '"Boardgame recommu" <sukachathum.s@ku.th>',
+                    from: '"Boardgame recCommu" <sukachathum.s@ku.th>',
                     to: `'Customer' <${email}>`,
                     subject: "Reset Password",
                     date:new Date(),

@@ -8,6 +8,7 @@ interface PopularBoardGameItem {
     name:string
     picture:string
     year:string
+    id:string
 }
 
 export default async function PopularBoardGame(req:Request , res:Response) {
@@ -24,7 +25,8 @@ export default async function PopularBoardGame(req:Request , res:Response) {
             const body:PopularBoardGameItem = {
                 name:jsonObject.elements[0].elements[i].elements[1].attributes.value,
                 picture:jsonObject.elements[0].elements[i].elements[0].attributes.value,
-                year:jsonObject.elements[0].elements[i].elements[2].attributes.value
+                year:jsonObject.elements[0].elements[i].elements[2].attributes.value,
+                id:jsonObject.elements[0].elements[i].attributes.id
             }
             resultPopularBoardGame.push(body)
         }

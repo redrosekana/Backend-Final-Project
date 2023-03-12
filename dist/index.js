@@ -40,7 +40,7 @@ const route_1 = __importDefault(require("./router/route"));
 const app = (0, express_1.default)();
 const port = String(process.env.PORT);
 app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
+app.use(express_1.default.urlencoded({ extended: true, limit: "100mb" }));
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)("dev"));
 app.set("view engine", "ejs");

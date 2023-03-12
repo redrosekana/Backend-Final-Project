@@ -87,7 +87,7 @@ function SendEmail(req, res) {
                         link: `<a class='btn' href='${url_frontend}?token=${token}'>ยืนยันตัวตน</a>`
                     });
                     const info = {
-                        from: '"Boardgame recommu" <sukachathum.s@ku.th>',
+                        from: '"Boardgame recCommu" <sukachathum.s@ku.th>',
                         to: `'Customer' <${email}>`,
                         subject: "Reset Password",
                         date: new Date(),

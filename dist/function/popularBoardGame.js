@@ -28,7 +28,8 @@ function PopularBoardGame(req, res) {
                 const body = {
                     name: jsonObject.elements[0].elements[i].elements[1].attributes.value,
                     picture: jsonObject.elements[0].elements[i].elements[0].attributes.value,
-                    year: jsonObject.elements[0].elements[i].elements[2].attributes.value
+                    year: jsonObject.elements[0].elements[i].elements[2].attributes.value,
+                    id: jsonObject.elements[0].elements[i].attributes.id
                 };
                 resultPopularBoardGame.push(body);
             }
