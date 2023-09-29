@@ -28,8 +28,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const dotenv = __importStar(require("dotenv"));
-const validateEnv_1 = require("./utils/validateEnv");
+// import { validateEnv } from "./utils/validateEnv";
 dotenv.config();
-(0, validateEnv_1.validateEnv)();
+// validateEnv();
 const app = new app_1.default();
 app.listen();
