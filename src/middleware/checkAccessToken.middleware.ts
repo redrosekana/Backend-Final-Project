@@ -21,7 +21,7 @@ export default async function checkAccessToken(
     }
   } catch (error) {
     console.log(error);
-    next(new UnAuthorizationException("required token"));
+    next(new UnAuthorizationException("token expired"));
   }
 }
 

@@ -43,8 +43,8 @@ class BoardgameController {
         const boardgamePopular = {
           id: tmp.attributes.id,
           name: tmp.elements[1].attributes.value,
-          picture: tmp.elements[2].attributes.value,
-          year: tmp.elements[0].attributes.value,
+          picture: tmp.elements[0].attributes.value,
+          year: tmp.elements[2].attributes.value,
         };
         data.push(boardgamePopular);
       }
@@ -66,8 +66,8 @@ class BoardgameController {
     next: NextFunction
   ) {
     try {
+      const boardgame_name: string = (req.body.boardgame_name as string).trim();
       const boardgameEntriesResult: any[] = [];
-      const { boardgame_name } = req.body;
       const boardgameCurrent = await boardgameRecommendModel.findOne({
         game: { $eq: boardgame_name },
       });
