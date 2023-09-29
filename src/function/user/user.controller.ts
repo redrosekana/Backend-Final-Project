@@ -16,9 +16,17 @@ class UserController {
     const displayName = (req.body.displayName as string).trim();
     const username = (req.body.username as string).trim();
 
-    if (await userModel.findOne({ displayName: { $eq: displayName } })) {
+    const user = await userModel.findOne({ email: { $eq: payload.email } });
+
+    if (
+      (await userModel.findOne({ displayName: { $eq: displayName } })) &&
+      user?.displayName !== displayName
+    ) {
       next(new BadRequestException("displayName is repeated"));
-    } else if (await userModel.findOne({ username: { $eq: username } })) {
+    } else if (
+      (await userModel.findOne({ username: { $eq: username } })) &&
+      user?.username !== username
+    ) {
       next(new BadRequestException("username is repeated"));
     } else {
       if (payload.provider === "password") {

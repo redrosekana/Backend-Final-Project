@@ -80,7 +80,7 @@ class AuthController {
             provider: user.provider,
           };
           const accessToken = jwt.sign(payload, SECRET_ACCESSTOKEN, {
-            expiresIn: "600000ms",
+            expiresIn: "6000000ms",
           });
           const refreshToken = jwt.sign(payload, SECRET_REFRESHTOKEN, {
             expiresIn: "1800000ms",
@@ -134,12 +134,15 @@ class AuthController {
     }
   }
 
-  public detailUser(req: Request, res: Response) {
+  public async detailUser(req: Request, res: Response) {
     const payload: PayloadUser = req.payload;
+    const user = await userModel
+      .findOne({ email: { $eq: payload.email } })
+      .select("-password -__v");
     res.status(200).json({
       statusCode: 200,
       message: "user is authenticated",
-      data: { ...payload },
+      data: user,
     });
   }
 
@@ -176,6 +179,7 @@ class AuthController {
       }
     } catch (error) {
       console.log(error);
+      next(error);
     }
   }
 }
