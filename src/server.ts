@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import { validateEnv } from "./utils/validateEnv";
 
 dotenv.config();
-validateEnv();
+// validateEnv();
 
 const app = new App();
 app.listen();
