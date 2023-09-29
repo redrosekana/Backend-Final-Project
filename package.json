@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./dist/server.js",
+    "build": "mv node_modules ./dist",
     "start": "node ./dist/server.js",
     "dev": "ts-node-dev --files ./src/server.ts"
   },
