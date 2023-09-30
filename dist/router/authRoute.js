@@ -22,6 +22,7 @@ class AuthRoute {
     initialRoutes() {
         this.router.post(`${this.path}/register`, (0, validation_middleware_1.default)(auth_dto_1.RegisterDTO), this.authController.register);
         this.router.post(`${this.path}/login-password`, (0, validation_middleware_1.default)(auth_dto_1.LoginPasswordDTO), this.authController.loginPassword);
+        this.router.post(`${this.path}/login-google`, (0, validation_middleware_1.default)(auth_dto_1.LoginGoogleDTO), this.authController.loginGoogle);
         this.router.get(`${this.path}/new-token`, checkRefreshToken_middleware_1.default, this.authController.tokenRenew);
         this.router.get(`${this.path}/detail-user`, checkAccessToken_middleware_1.default, this.authController.detailUser);
         this.router.post(`${this.path}/password`, checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(auth_dto_1.UpdatePasswordDTO), this.authController.updatePassword);

@@ -12,29 +12,50 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // model
 const user_schema_1 = require("../../schema/user.schema");
 // exception
-const UnAuthorizationException_1 = require("../../exeptions/UnAuthorizationException");
 const BadRequestException_1 = require("../../exeptions/BadRequestException");
 class UserController {
     updateUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const payload = req.payload;
-            const displayName = req.body.displayName.trim();
-            const username = req.body.username.trim();
-            const user = yield user_schema_1.userModel.findOne({ email: { $eq: payload.email } });
-            if ((yield user_schema_1.userModel.findOne({ displayName: { $eq: displayName } })) &&
-                (user === null || user === void 0 ? void 0 : user.displayName) !== displayName) {
-                next(new BadRequestException_1.BadRequestException("displayName is repeated"));
-            }
-            else if ((yield user_schema_1.userModel.findOne({ username: { $eq: username } })) &&
-                (user === null || user === void 0 ? void 0 : user.username) !== username) {
-                next(new BadRequestException_1.BadRequestException("username is repeated"));
-            }
-            else {
+            try {
+                const payload = req.payload;
                 if (payload.provider === "password") {
-                    yield user_schema_1.userModel.findOneAndUpdate({ email: { $eq: payload.email } }, {
+                    const displayName = req.body.displayName.trim();
+                    const username = req.body.username.trim();
+                    const user = yield user_schema_1.userModel.findOne({
+                        email: { $eq: payload.email },
+                        provider: { $eq: "password" },
+                    });
+                    if ((yield user_schema_1.userModel.findOne({
+                        username: { $eq: username },
+                        provider: { $eq: payload.provider },
+                    })) &&
+                        (user === null || user === void 0 ? void 0 : user.username) !== username) {
+                        next(new BadRequestException_1.BadRequestException("username is repeated"));
+                    }
+                    else {
+                        yield user_schema_1.userModel.findOneAndUpdate({
+                            email: { $eq: payload.email },
+                            provider: { $eq: "password" },
+                        }, {
+                            $set: {
+                                displayName,
+                                username,
+                            },
+                        });
+                        res.status(202).json({
+                            statusCode: 202,
+                            message: "successfully update user",
+                        });
+                    }
+                }
+                else {
+                    const displayName = req.body.displayName.trim();
+                    yield user_schema_1.userModel.findOneAndUpdate({
+                        email: { $eq: payload.email },
+                        provider: { $eq: payload.provider },
+                    }, {
                         $set: {
                             displayName,
-                            username,
                         },
                     });
                     res.status(202).json({
@@ -42,11 +63,10 @@ class UserController {
                         message: "successfully update user",
                     });
                 }
-                else if (payload.provider === "google") {
-                }
-                else {
-                    next(new UnAuthorizationException_1.UnAuthorizationException("failure updated user"));
-                }
+            }
+            catch (error) {
+                console.log(error);
+                next(error);
             }
         });
     }

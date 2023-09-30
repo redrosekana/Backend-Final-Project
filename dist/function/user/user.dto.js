@@ -12,10 +12,10 @@ class UpdateUserDTO {
 }
 exports.UpdateUserDTO = UpdateUserDTO;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)()
 ], UpdateUserDTO.prototype, "displayName", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)()
 ], UpdateUserDTO.prototype, "username", void 0);

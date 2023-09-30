@@ -37,6 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jwt = __importStar(require("jsonwebtoken"));
+const google_auth_library_1 = require("google-auth-library");
 // model
 const user_schema_1 = require("../../schema/user.schema");
 // exception
@@ -52,10 +53,7 @@ class AuthController {
                 const username = req.body.username.trim();
                 const password = req.body.password.trim();
                 const email = req.body.email.trim();
-                if (yield user_schema_1.userModel.findOne({ displayName: { $eq: displayName } })) {
-                    next(new BadRequestException_1.BadRequestException("displayName is repeated"));
-                }
-                else if (yield user_schema_1.userModel.findOne({ username: { $eq: username } })) {
+                if (yield user_schema_1.userModel.findOne({ username: { $eq: username } })) {
                     next(new BadRequestException_1.BadRequestException("username is repeated"));
                 }
                 else if (yield user_schema_1.userModel.findOne({ email: { $eq: email } })) {
@@ -88,7 +86,10 @@ class AuthController {
             try {
                 const username = req.body.username.trim();
                 const password = req.body.password.trim();
-                const user = yield user_schema_1.userModel.findOne({ username: { $eq: username } });
+                const user = yield user_schema_1.userModel.findOne({
+                    username: { $eq: username },
+                    provider: { $eq: "password" },
+                });
                 if (!user) {
                     next(new UnAuthorizationException_1.UnAuthorizationException("there is no username in the system"));
                 }
@@ -124,11 +125,57 @@ class AuthController {
             }
         });
     }
+    loginGoogle(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const google_token = req.body.google_token.trim();
+                const client = new google_auth_library_1.OAuth2Client();
+                const result = yield client.verifyIdToken({
+                    idToken: google_token,
+                });
+                const googlePayload = result.getPayload();
+                const user = yield user_schema_1.userModel.findOne({
+                    email: googlePayload === null || googlePayload === void 0 ? void 0 : googlePayload.email,
+                    provider: "google",
+                });
+                if (!user) {
+                    yield user_schema_1.userModel.create({
+                        displayName: "guest",
+                        email: googlePayload === null || googlePayload === void 0 ? void 0 : googlePayload.email,
+                        provider: "google",
+                    });
+                }
+                const payload = {
+                    displayName: (user === null || user === void 0 ? void 0 : user.displayName) || "guest",
+                    email: (user === null || user === void 0 ? void 0 : user.email) || (googlePayload === null || googlePayload === void 0 ? void 0 : googlePayload.email),
+                    provider: "google",
+                };
+                const accessToken = jwt.sign(payload, variable_1.SECRET_ACCESSTOKEN, {
+                    expiresIn: "6000000ms",
+                });
+                const refreshToken = jwt.sign(payload, variable_1.SECRET_REFRESHTOKEN, {
+                    expiresIn: "1800000ms",
+                });
+                res.status(200).json({
+                    statusCode: 200,
+                    message: "successfully login user",
+                    accessToken,
+                    refreshToken,
+                });
+            }
+            catch (error) {
+                console.log(error);
+                next(error);
+            }
+        });
+    }
     tokenRenew(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const payload = req.payload;
                 const user = yield user_schema_1.userModel.findOne({
-                    email: { $eq: req.payload.email },
+                    email: { $eq: payload.email },
+                    provider: { $eq: payload.provider },
                 });
                 if (!user) {
                     next(new UnAuthorizationException_1.UnAuthorizationException("access denied for user"));
@@ -163,7 +210,10 @@ class AuthController {
         return __awaiter(this, void 0, void 0, function* () {
             const payload = req.payload;
             const user = yield user_schema_1.userModel
-                .findOne({ email: { $eq: payload.email } })
+                .findOne({
+                email: { $eq: payload.email },
+                provider: { $eq: payload.provider },
+            })
                 .select("-password -__v");
             res.status(200).json({
                 statusCode: 200,
@@ -175,10 +225,12 @@ class AuthController {
     updatePassword(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const payload = req.payload;
                 const password_old = req.body.password_old.trim();
                 const password_new = req.body.password_new.trim();
                 const user = yield user_schema_1.userModel.findOne({
-                    email: { $eq: req.payload.email },
+                    email: { $eq: payload.email },
+                    provider: { $eq: "password" },
                 });
                 const checkPassword = yield bcrypt_1.default.compare(password_old, user === null || user === void 0 ? void 0 : user.password);
                 if (!checkPassword) {
@@ -187,7 +239,7 @@ class AuthController {
                 else {
                     const salt = yield bcrypt_1.default.genSalt(variable_1.SALT);
                     const passwordNewEncrypt = yield bcrypt_1.default.hash(password_new, salt);
-                    yield user_schema_1.userModel.findOneAndUpdate({ email: req.payload.email }, {
+                    yield user_schema_1.userModel.findOneAndUpdate({ email: req.payload.email, provider: { $eq: payload.provider } }, {
                         $set: {
                             password: passwordNewEncrypt,
                         },

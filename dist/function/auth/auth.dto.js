@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdatePasswordDTO = exports.LoginPasswordDTO = exports.RegisterDTO = void 0;
+exports.UpdatePasswordDTO = exports.LoginGoogleDTO = exports.LoginPasswordDTO = exports.RegisterDTO = void 0;
 const class_validator_1 = require("class-validator");
 class RegisterDTO {
 }
@@ -38,6 +38,13 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)()
 ], LoginPasswordDTO.prototype, "password", void 0);
+class LoginGoogleDTO {
+}
+exports.LoginGoogleDTO = LoginGoogleDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)()
+], LoginGoogleDTO.prototype, "google_token", void 0);
 class UpdatePasswordDTO {
 }
 exports.UpdatePasswordDTO = UpdatePasswordDTO;
