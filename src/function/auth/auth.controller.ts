@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 
 // model
 import { userModel } from "../../schema/user.schema";
@@ -27,9 +28,7 @@ class AuthController {
       const password: string = (req.body.password as string).trim();
       const email: string = (req.body.email as string).trim();
 
-      if (await userModel.findOne({ displayName: { $eq: displayName } })) {
-        next(new BadRequestException("displayName is repeated"));
-      } else if (await userModel.findOne({ username: { $eq: username } })) {
+      if (await userModel.findOne({ username: { $eq: username } })) {
         next(new BadRequestException("username is repeated"));
       } else if (await userModel.findOne({ email: { $eq: email } })) {
         next(new BadRequestException("email is repeated"));
@@ -59,7 +58,10 @@ class AuthController {
     try {
       const username: string = (req.body.username as string).trim();
       const password: string = (req.body.password as string).trim();
-      const user = await userModel.findOne({ username: { $eq: username } });
+      const user = await userModel.findOne({
+        username: { $eq: username },
+        provider: { $eq: "password" },
+      });
 
       if (!user) {
         next(
@@ -100,10 +102,59 @@ class AuthController {
     }
   }
 
+  public async loginGoogle(req: Request, res: Response, next: NextFunction) {
+    try {
+      const google_token: string = (req.body.google_token as string).trim();
+      const client = new OAuth2Client();
+
+      const result = await client.verifyIdToken({
+        idToken: google_token,
+      });
+
+      const googlePayload = result.getPayload();
+      const user = await userModel.findOne({
+        email: googlePayload?.email,
+        provider: "google",
+      });
+
+      if (!user) {
+        await userModel.create({
+          displayName: "guest",
+          email: googlePayload?.email,
+          provider: "google",
+        });
+      }
+
+      const payload: PayloadUser = {
+        displayName: user?.displayName || "guest",
+        email: user?.email || googlePayload?.email,
+        provider: "google",
+      };
+      const accessToken = jwt.sign(payload, SECRET_ACCESSTOKEN, {
+        expiresIn: "6000000ms",
+      });
+      const refreshToken = jwt.sign(payload, SECRET_REFRESHTOKEN, {
+        expiresIn: "1800000ms",
+      });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: "successfully login user",
+        accessToken,
+        refreshToken,
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
   public async tokenRenew(req: Request, res: Response, next: NextFunction) {
     try {
+      const payload: PayloadUser = req.payload;
       const user = await userModel.findOne({
-        email: { $eq: req.payload.email },
+        email: { $eq: payload.email },
+        provider: { $eq: payload.provider },
       });
 
       if (!user) {
@@ -137,8 +188,12 @@ class AuthController {
   public async detailUser(req: Request, res: Response) {
     const payload: PayloadUser = req.payload;
     const user = await userModel
-      .findOne({ email: { $eq: payload.email } })
+      .findOne({
+        email: { $eq: payload.email },
+        provider: { $eq: payload.provider },
+      })
       .select("-password -__v");
+
     res.status(200).json({
       statusCode: 200,
       message: "user is authenticated",
@@ -148,10 +203,12 @@ class AuthController {
 
   public async updatePassword(req: Request, res: Response, next: NextFunction) {
     try {
+      const payload: PayloadUser = req.payload;
       const password_old: string = (req.body.password_old as string).trim();
       const password_new: string = (req.body.password_new as string).trim();
       const user = await userModel.findOne({
-        email: { $eq: req.payload.email },
+        email: { $eq: payload.email },
+        provider: { $eq: "password" },
       });
       const checkPassword = await bcrypt.compare(
         password_old,
@@ -164,7 +221,7 @@ class AuthController {
         const salt = await bcrypt.genSalt(SALT);
         const passwordNewEncrypt = await bcrypt.hash(password_new, salt);
         await userModel.findOneAndUpdate(
-          { email: req.payload.email },
+          { email: req.payload.email, provider: { $eq: payload.provider } },
           {
             $set: {
               password: passwordNewEncrypt,
