@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from "express";
 import { userModel } from "../../schema/user.schema";
 
 // exception
-import { UnAuthorizationException } from "../../exeptions/UnAuthorizationException";
 import { BadRequestException } from "../../exeptions/BadRequestException";
 
 // interface
@@ -12,42 +11,64 @@ import { PayloadUser } from "../../interface/payload.interface";
 
 class UserController {
   public async updateUser(req: Request, res: Response, next: NextFunction) {
-    const payload: PayloadUser = req.payload;
-    const displayName = (req.body.displayName as string).trim();
-    const username = (req.body.username as string).trim();
-
-    const user = await userModel.findOne({ email: { $eq: payload.email } });
-
-    if (
-      (await userModel.findOne({ displayName: { $eq: displayName } })) &&
-      user?.displayName !== displayName
-    ) {
-      next(new BadRequestException("displayName is repeated"));
-    } else if (
-      (await userModel.findOne({ username: { $eq: username } })) &&
-      user?.username !== username
-    ) {
-      next(new BadRequestException("username is repeated"));
-    } else {
+    try {
+      const payload: PayloadUser = req.payload;
       if (payload.provider === "password") {
+        const displayName = (req.body.displayName as string).trim();
+        const username = (req.body.username as string).trim();
+        const user = await userModel.findOne({
+          email: { $eq: payload.email },
+          provider: { $eq: "password" },
+        });
+
+        if (
+          (await userModel.findOne({
+            username: { $eq: username },
+            provider: { $eq: payload.provider },
+          })) &&
+          user?.username !== username
+        ) {
+          next(new BadRequestException("username is repeated"));
+        } else {
+          await userModel.findOneAndUpdate(
+            {
+              email: { $eq: payload.email },
+              provider: { $eq: "password" },
+            },
+            {
+              $set: {
+                displayName,
+                username,
+              },
+            }
+          );
+
+          res.status(202).json({
+            statusCode: 202,
+            message: "successfully update user",
+          });
+        }
+      } else {
+        const displayName = (req.body.displayName as string).trim();
         await userModel.findOneAndUpdate(
-          { email: { $eq: payload.email } },
+          {
+            email: { $eq: payload.email },
+            provider: { $eq: payload.provider },
+          },
           {
             $set: {
               displayName,
-              username,
             },
           }
         );
-
         res.status(202).json({
           statusCode: 202,
           message: "successfully update user",
         });
-      } else if (payload.provider === "google") {
-      } else {
-        next(new UnAuthorizationException("failure updated user"));
       }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
   }
 }

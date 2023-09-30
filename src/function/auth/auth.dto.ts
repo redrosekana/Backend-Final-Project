@@ -28,6 +28,12 @@ export class LoginPasswordDTO {
   private password!: string;
 }
 
+export class LoginGoogleDTO {
+  @IsNotEmpty()
+  @IsString()
+  private google_token!: string;
+}
+
 export class UpdatePasswordDTO {
   @IsNotEmpty()
   @IsString()

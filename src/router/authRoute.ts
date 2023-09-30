@@ -13,6 +13,7 @@ import {
   RegisterDTO,
   LoginPasswordDTO,
   UpdatePasswordDTO,
+  LoginGoogleDTO,
 } from "../function/auth/auth.dto";
 
 class AuthRoute {
@@ -37,6 +38,11 @@ class AuthRoute {
       `${this.path}/login-password`,
       ValidationMiddleware(LoginPasswordDTO),
       this.authController.loginPassword
+    );
+    this.router.post(
+      `${this.path}/login-google`,
+      ValidationMiddleware(LoginGoogleDTO),
+      this.authController.loginGoogle
     );
     this.router.get(
       `${this.path}/new-token`,
