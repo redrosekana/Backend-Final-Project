@@ -192,6 +192,36 @@ class AuthController {
         email: { $eq: payload.email },
         provider: { $eq: payload.provider },
       })
+      .populate({
+        path: "ownerParty",
+        select: {
+          member: 0,
+          __v: 0,
+        },
+        populate: {
+          path: "owner",
+          select: {
+            displayName: 1,
+            email: 1,
+            _id: 0,
+          },
+        },
+      })
+      .populate({
+        path: "memberParty",
+        select: {
+          member: 0,
+          __v: 0,
+        },
+        populate: {
+          path: "owner",
+          select: {
+            displayName: 1,
+            email: 1,
+            _id: 0,
+          },
+        },
+      })
       .select("-password -__v");
 
     res.status(200).json({

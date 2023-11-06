@@ -12,6 +12,7 @@ import UserRoute from "./router/userRoute";
 import AuthRoute from "./router/authRoute";
 import BoardgameRoute from "./router/boardgameRoute";
 import ForgetPasswordRoute from "./router/forgetPasswordRoute";
+import PartyRoute from "./router/partyRoute";
 
 // middleware
 import ErrorMiddleware from "./middleware/error.middleware";
@@ -32,6 +33,7 @@ export default class App {
       new BoardgameRoute(),
       new ForgetPasswordRoute(),
       new NormalRoute(),
+      new PartyRoute(),
     ]);
     this.initialErrorMiddleware();
   }

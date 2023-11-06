@@ -74,7 +74,7 @@ class BoardgameController {
 
       if (!boardgameCurrent) {
         next(
-          new BadRequestException("there is no boardgame_name in the system")
+          new BadRequestException("there isn't a boardgame in the system")
         );
       } else {
         const boardgameRecommendEntries = boardgameCurrent?.recommend;
