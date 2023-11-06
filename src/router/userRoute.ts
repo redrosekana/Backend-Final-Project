@@ -1,7 +1,7 @@
-import express, { Express, Request, Response, Router } from "express";
+import express, { Router } from "express";
 
 import UserController from "../function/user/user.controller";
-import { UpdateUserDTO } from "../function/user/user.dto";
+import { UpdateUserDTO, ChangeAvatarDTO } from "../function/user/user.dto";
 import ValidationMiddleware from "../middleware/validation.middleware";
 import checkAccessToken from "../middleware/checkAccessToken.middleware";
 
@@ -23,6 +23,13 @@ class UserRoute {
       checkAccessToken,
       ValidationMiddleware(UpdateUserDTO),
       this.userController.updateUser
+    );
+
+    this.router.patch(
+      `${this.path}/avatar`,
+      checkAccessToken,
+      ValidationMiddleware(ChangeAvatarDTO),
+      this.userController.changeAvatar
     );
   }
 }

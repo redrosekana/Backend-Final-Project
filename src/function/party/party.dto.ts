@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from "class-validator";
 
 export default class PartyDto {
   @IsNotEmpty()
@@ -16,4 +16,8 @@ export default class PartyDto {
   @IsNotEmpty()
   @IsString()
   place!: string;
+
+  @IsOptional()
+  @IsString()
+  description!: string;
 }

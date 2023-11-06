@@ -13,6 +13,7 @@ const userRoute_1 = __importDefault(require("./router/userRoute"));
 const authRoute_1 = __importDefault(require("./router/authRoute"));
 const boardgameRoute_1 = __importDefault(require("./router/boardgameRoute"));
 const forgetPasswordRoute_1 = __importDefault(require("./router/forgetPasswordRoute"));
+const partyRoute_1 = __importDefault(require("./router/partyRoute"));
 // middleware
 const error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
 // enviroment variable
@@ -28,6 +29,7 @@ class App {
             new boardgameRoute_1.default(),
             new forgetPasswordRoute_1.default(),
             new normalRoute_1.default(),
+            new partyRoute_1.default(),
         ]);
         this.initialErrorMiddleware();
     }

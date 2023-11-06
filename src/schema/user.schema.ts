@@ -5,6 +5,7 @@ interface User {
   username?: string;
   password?: string;
   email?: string;
+  urlAvatar?: string;
   lat?: string;
   lon?: string;
   provider: string;
@@ -17,6 +18,7 @@ const userSchema = new Schema<User>({
   username: { type: mongoose.Schema.Types.String },
   password: { type: mongoose.Schema.Types.String },
   email: { type: mongoose.Schema.Types.String },
+  urlAvatar: { type: mongoose.Schema.Types.String },
   lat: { type: mongoose.Schema.Types.String },
   lon: { type: mongoose.Schema.Types.String },
   provider: {

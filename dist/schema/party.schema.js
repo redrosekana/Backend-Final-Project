@@ -23,28 +23,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userModel = void 0;
+exports.partyModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    displayName: { type: mongoose_1.default.Schema.Types.String },
-    username: { type: mongoose_1.default.Schema.Types.String },
-    password: { type: mongoose_1.default.Schema.Types.String },
-    email: { type: mongoose_1.default.Schema.Types.String },
-    urlAvatar: { type: mongoose_1.default.Schema.Types.String },
-    lat: { type: mongoose_1.default.Schema.Types.String },
-    lon: { type: mongoose_1.default.Schema.Types.String },
-    provider: {
-        type: mongoose_1.default.Schema.Types.String,
+const partySchema = new mongoose_1.Schema({
+    name: { type: mongoose_1.default.Schema.Types.String, required: true },
+    limit: {
+        type: mongoose_1.default.Schema.Types.Number,
         required: true,
-        enum: ["password", "google", "github"],
+        min: 1,
     },
-    ownerParty: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "party",
-    },
-    memberParty: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "party",
-    },
+    category: { type: mongoose_1.default.Schema.Types.String, required: true },
+    duration: { type: mongoose_1.default.Schema.Types.Number, required: true },
+    place: { type: mongoose_1.default.Schema.Types.String, required: true },
+    description: { type: mongoose_1.default.Schema.Types.String },
+    owner: { type: mongoose_1.default.Schema.Types.ObjectId, ref: "user", required: true },
+    member: { type: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "user" }] },
+    countMember: { type: mongoose_1.default.Schema.Types.Number, required: true },
 });
-exports.userModel = (0, mongoose_1.model)("user", userSchema);
+exports.partyModel = (0, mongoose_1.model)("party", partySchema);

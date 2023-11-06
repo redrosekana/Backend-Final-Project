@@ -8,6 +8,7 @@
     "build": "mv node_modules ./dist",
     "start": "node ./src/server.js",
     "start:docker": "node ./dist/server.js",
+    "prod": "node ./dist/server.js",
     "dev": "ts-node-dev --files ./src/server.ts"
   },
   "keywords": [],

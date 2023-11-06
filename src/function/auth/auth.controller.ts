@@ -18,6 +18,7 @@ import {
   SALT,
   SECRET_ACCESSTOKEN,
   SECRET_REFRESHTOKEN,
+  URL_CLOUDSTORAGE,
 } from "../../config/variable";
 
 class AuthController {
@@ -28,7 +29,9 @@ class AuthController {
       const password: string = (req.body.password as string).trim();
       const email: string = (req.body.email as string).trim();
 
-      if (await userModel.findOne({ username: { $eq: username } })) {
+      if (await userModel.findOne({ displayName: { $eq: displayName } })) {
+        next(new BadRequestException("displayName is repeated"));
+      } else if (await userModel.findOne({ username: { $eq: username } })) {
         next(new BadRequestException("username is repeated"));
       } else if (await userModel.findOne({ email: { $eq: email } })) {
         next(new BadRequestException("email is repeated"));
@@ -39,6 +42,9 @@ class AuthController {
           displayName: displayName,
           username: username,
           password: passwordEncrypt,
+          urlAvatar: `${URL_CLOUDSTORAGE}/avatar-maker/avatar-${
+            1 + Math.floor(Math.random() * 60)
+          }.svg`,
           email: email,
           provider: "password",
         });
@@ -121,6 +127,9 @@ class AuthController {
         await userModel.create({
           displayName: "guest",
           email: googlePayload?.email,
+          urlAvatar: `${URL_CLOUDSTORAGE}/avatar-maker/avatar-${
+            1 + Math.floor(Math.random() * 60)
+          }.svg`,
           provider: "google",
         });
       }
@@ -195,32 +204,54 @@ class AuthController {
       .populate({
         path: "ownerParty",
         select: {
-          member: 0,
           __v: 0,
         },
-        populate: {
-          path: "owner",
-          select: {
-            displayName: 1,
-            email: 1,
-            _id: 0,
+        populate: [
+          {
+            path: "owner",
+            select: {
+              displayName: 1,
+              urlAvatar: 1,
+              email: 1,
+              _id: 0,
+            },
           },
-        },
+          {
+            path: "member",
+            select: {
+              displayName: 1,
+              urlAvatar: 1,
+              email: 1,
+              _id: 0,
+            },
+          },
+        ],
       })
       .populate({
         path: "memberParty",
         select: {
-          member: 0,
           __v: 0,
         },
-        populate: {
-          path: "owner",
-          select: {
-            displayName: 1,
-            email: 1,
-            _id: 0,
+        populate: [
+          {
+            path: "owner",
+            select: {
+              displayName: 1,
+              urlAvatar: 1,
+              email: 1,
+              _id: 0,
+            },
           },
-        },
+          {
+            path: "member",
+            select: {
+              displayName: 1,
+              urlAvatar: 1,
+              email: 1,
+              _id: 0,
+            },
+          },
+        ],
       })
       .select("-password -__v");
 

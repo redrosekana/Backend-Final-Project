@@ -10,6 +10,7 @@ const SECRET_EMAIL = process.env.SECRET_EMAIL as string;
 const PASSWORD_EMAIL = process.env.PASSWORD_EMAIL as string;
 const URL_FRONTEND = process.env.URL_FRONTEND as string;
 const URL_POPULARBOARDGAME = process.env.URL_POPULARBOARDGAME as string;
+const URL_CLOUDSTORAGE = process.env.URL_CLOUDSTORAGE as string;
 
 export {
   URL_MONGODB,
@@ -21,4 +22,5 @@ export {
   PASSWORD_EMAIL,
   URL_FRONTEND,
   URL_POPULARBOARDGAME,
+  URL_CLOUDSTORAGE,
 };

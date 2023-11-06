@@ -53,7 +53,10 @@ class AuthController {
                 const username = req.body.username.trim();
                 const password = req.body.password.trim();
                 const email = req.body.email.trim();
-                if (yield user_schema_1.userModel.findOne({ username: { $eq: username } })) {
+                if (yield user_schema_1.userModel.findOne({ displayName: { $eq: displayName } })) {
+                    next(new BadRequestException_1.BadRequestException("displayName is repeated"));
+                }
+                else if (yield user_schema_1.userModel.findOne({ username: { $eq: username } })) {
                     next(new BadRequestException_1.BadRequestException("username is repeated"));
                 }
                 else if (yield user_schema_1.userModel.findOne({ email: { $eq: email } })) {
@@ -66,6 +69,7 @@ class AuthController {
                         displayName: displayName,
                         username: username,
                         password: passwordEncrypt,
+                        urlAvatar: `${variable_1.URL_CLOUDSTORAGE}/avatar-maker/avatar-${1 + Math.floor(Math.random() * 60)}.svg`,
                         email: email,
                         provider: "password",
                     });
@@ -142,6 +146,7 @@ class AuthController {
                     yield user_schema_1.userModel.create({
                         displayName: "guest",
                         email: googlePayload === null || googlePayload === void 0 ? void 0 : googlePayload.email,
+                        urlAvatar: `${variable_1.URL_CLOUDSTORAGE}/avatar-maker/avatar-${1 + Math.floor(Math.random() * 60)}.svg`,
                         provider: "google",
                     });
                 }
@@ -213,6 +218,58 @@ class AuthController {
                 .findOne({
                 email: { $eq: payload.email },
                 provider: { $eq: payload.provider },
+            })
+                .populate({
+                path: "ownerParty",
+                select: {
+                    __v: 0,
+                },
+                populate: [
+                    {
+                        path: "owner",
+                        select: {
+                            displayName: 1,
+                            urlAvatar: 1,
+                            email: 1,
+                            _id: 0,
+                        },
+                    },
+                    {
+                        path: "member",
+                        select: {
+                            displayName: 1,
+                            urlAvatar: 1,
+                            email: 1,
+                            _id: 0,
+                        },
+                    },
+                ],
+            })
+                .populate({
+                path: "memberParty",
+                select: {
+                    __v: 0,
+                },
+                populate: [
+                    {
+                        path: "owner",
+                        select: {
+                            displayName: 1,
+                            urlAvatar: 1,
+                            email: 1,
+                            _id: 0,
+                        },
+                    },
+                    {
+                        path: "member",
+                        select: {
+                            displayName: 1,
+                            urlAvatar: 1,
+                            email: 1,
+                            _id: 0,
+                        },
+                    },
+                ],
             })
                 .select("-password -__v");
             res.status(200).json({

@@ -77,7 +77,7 @@ class BoardgameController {
                     game: { $eq: boardgame_name },
                 });
                 if (!boardgameCurrent) {
-                    next(new BadRequestException_1.BadRequestException("there is no boardgame_name in the system"));
+                    next(new BadRequestException_1.BadRequestException("there isn't a boardgame in the system"));
                 }
                 else {
                     const boardgameRecommendEntries = boardgameCurrent === null || boardgameCurrent === void 0 ? void 0 : boardgameCurrent.recommend;

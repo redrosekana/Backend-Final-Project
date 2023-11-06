@@ -62,14 +62,16 @@ class PartyController {
       const limit = parseInt(req.query.limit as string) || 3;
       const page = parseInt(req.query.page as string) || 1;
 
-      // remain a search feature
       const search = req.query.search || "";
+      const regex = new RegExp(search as string, "ig");
 
-      const totalDocs = await partyModel.find({}).countDocuments();
+      const totalDocs = await partyModel
+        .find({ name: { $regex: regex } })
+        .countDocuments();
       const totalPages = getTotalPages(limit, totalDocs);
 
       const parties = await partyModel
-        .find({})
+        .find({ name: { $regex: regex } })
         .select("-__v")
         .skip(skipDocuments(limit, page))
         .limit(limit)
@@ -139,6 +141,7 @@ class PartyController {
             { email, provider },
             { $set: { memberParty: party?._id } }
           );
+
           res.status(200).json({
             statusCode: 200,
             message: "successfully joined party",

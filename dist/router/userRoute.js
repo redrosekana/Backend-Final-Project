@@ -17,6 +17,7 @@ class UserRoute {
     }
     initialRoutes() {
         this.router.patch(`${this.path}`, checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.UpdateUserDTO), this.userController.updateUser);
+        this.router.patch(`${this.path}/avatar`, checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.ChangeAvatarDTO), this.userController.changeAvatar);
     }
 }
 exports.default = UserRoute;

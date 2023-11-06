@@ -6,22 +6,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChangeAvatarDTO = exports.UpdateUserDTO = void 0;
 const class_validator_1 = require("class-validator");
-class UpdateUserDTO {
+class PartyDto {
 }
-exports.UpdateUserDTO = UpdateUserDTO;
+exports.default = PartyDto;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)()
+], PartyDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)()
+], PartyDto.prototype, "limit", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)()
+], PartyDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)()
+], PartyDto.prototype, "place", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)()
-], UpdateUserDTO.prototype, "displayName", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)()
-], UpdateUserDTO.prototype, "username", void 0);
-class ChangeAvatarDTO {
-}
-exports.ChangeAvatarDTO = ChangeAvatarDTO;
-__decorate([
-    (0, class_validator_1.IsUrl)()
-], ChangeAvatarDTO.prototype, "url", void 0);
+], PartyDto.prototype, "description", void 0);
