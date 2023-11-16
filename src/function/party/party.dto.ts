@@ -1,6 +1,12 @@
-import { IsNotEmpty, IsNumber, IsString, IsOptional } from "class-validator";
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsOptional,
+  IsArray,
+} from "class-validator";
 
-export default class PartyDto {
+export class PartyCreateDto {
   @IsNotEmpty()
   @IsString()
   name!: string;
@@ -9,9 +15,9 @@ export default class PartyDto {
   @IsNumber()
   limit!: number;
 
-  @IsNotEmpty()
-  @IsString()
-  category!: string;
+  @IsOptional()
+  @IsArray()
+  category!: string[];
 
   @IsNotEmpty()
   @IsString()
@@ -20,4 +26,16 @@ export default class PartyDto {
   @IsOptional()
   @IsString()
   description!: string;
+}
+
+export class ExpulsionMemberDTO {
+  @IsNotEmpty()
+  @IsString()
+  "user_id"!: string;
+}
+
+export class TransferenceOwnerDTO {
+  @IsNotEmpty()
+  @IsString()
+  "user_id"!: string;
 }

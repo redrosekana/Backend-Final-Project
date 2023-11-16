@@ -8,7 +8,11 @@ import checkAccessToken from "../middleware/checkAccessToken.middleware";
 import ValidationMiddleware from "../middleware/validation.middleware";
 
 // dto
-import PartyDto from "../function/party/party.dto";
+import {
+  ExpulsionMemberDTO,
+  PartyCreateDto,
+  TransferenceOwnerDTO,
+} from "../function/party/party.dto";
 
 class PartyRoute {
   public router: Router;
@@ -27,7 +31,7 @@ class PartyRoute {
     this.router.post(
       this.path,
       checkAccessToken,
-      ValidationMiddleware(PartyDto),
+      ValidationMiddleware(PartyCreateDto),
       this.partyController.createParty
     );
 
@@ -53,6 +57,20 @@ class PartyRoute {
       `${this.path}/removing/:id`,
       checkAccessToken,
       this.partyController.removeParty
+    );
+
+    this.router.patch(
+      `${this.path}/transference-owner/:id`,
+      checkAccessToken,
+      ValidationMiddleware(TransferenceOwnerDTO),
+      this.partyController.transferenceOwner
+    );
+
+    this.router.patch(
+      `${this.path}/expulsion/:id`,
+      checkAccessToken,
+      ValidationMiddleware(ExpulsionMemberDTO),
+      this.partyController.ExpulsionMemberInParty
     );
   }
 }

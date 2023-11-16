@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ObjectId, Types } from "mongoose";
 
 // exception
 import { BadRequestException } from "../../exeptions/BadRequestException";
@@ -28,12 +29,16 @@ class PartyController {
           )
         );
       } else {
+        // remain check element inside category
+
         const body = {
           ...req.body,
           owner: user?._id,
           member: [user?._id],
           countMember: 1,
         };
+
+        console.log(body);
 
         const party = await partyModel.create(body);
         await userModel.findOneAndUpdate(
@@ -198,6 +203,7 @@ class PartyController {
       next(error);
     }
   }
+
   public async removeParty(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, provider } = req.payload;
@@ -227,6 +233,117 @@ class PartyController {
         res.status(200).json({
           statusCode: 200,
           message: "successfully removed party",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  public async transferenceOwner(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { email, provider } = req.payload;
+      const { id } = req.params;
+      const user_id = (req.body.user_id as string).trim();
+
+      const currentUser = await userModel.findOne({
+        email: { $eq: email },
+        provider: { $eq: provider },
+      });
+      const currentParty = await partyModel.findById(id);
+      const nextMemberOwner = await userModel.findById(user_id);
+
+      if (String(currentUser?._id) !== String(currentParty?.owner)) {
+        next(new BadRequestException("you aren't a owner of party"));
+      } else if (!nextMemberOwner) {
+        next(new BadRequestException("there isn't a user in system"));
+      } else if (!currentParty?.member.includes(nextMemberOwner._id)) {
+        next(new BadRequestException("there isn't a user in party"));
+      } else if (String(currentParty.owner) === String(nextMemberOwner._id)) {
+        next(
+          new BadRequestException(
+            "you are owner so you can't transfer the owner yourself"
+          )
+        );
+      } else if (true) {
+        await userModel.findOneAndUpdate(
+          {
+            email: { $eq: email },
+            provider: { $eq: provider },
+          },
+          {
+            $unset: { ownerParty: "" },
+          }
+        );
+
+        await partyModel.findByIdAndUpdate(id, {
+          $set: { owner: nextMemberOwner._id },
+        });
+
+        await userModel.findByIdAndUpdate(user_id, {
+          $set: { ownerParty: currentParty._id },
+        });
+
+        res.status(200).json({
+          statusCode: 200,
+          message: "successfully transfer owner",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  public async ExpulsionMemberInParty(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { email, provider } = req.payload;
+      const { id } = req.params;
+      const user_id = (req.body.user_id as string).trim();
+
+      const currentUser = await userModel.findOne({
+        email: { $eq: email },
+        provider: { $eq: provider },
+      });
+      const expulsionMember = await userModel.findById(user_id);
+      const currentParty = await partyModel.findById(id);
+
+      if (String(currentUser?._id) !== String(currentParty?.owner)) {
+        next(new BadRequestException("you aren't a owner of party"));
+      } else if (!expulsionMember) {
+        next(new BadRequestException("there isn't a user in system"));
+      } else if (!currentParty?.member.includes(expulsionMember._id)) {
+        next(new BadRequestException("there isn't a user in party"));
+      } else if (String(currentParty.owner) === String(expulsionMember._id)) {
+        next(
+          new BadRequestException("you are owner so you can't fire yourself")
+        );
+      } else {
+        const filterMember: Types.ObjectId[] = currentParty.member.filter(
+          (member) => String(member) !== expulsionMember?.id
+        );
+
+        await partyModel.findByIdAndUpdate(id, {
+          $inc: { countMember: -1 },
+          $set: { member: filterMember },
+        });
+
+        await userModel.findByIdAndUpdate(expulsionMember?.id, {
+          $unset: { memberParty: "" },
+        });
+
+        res.status(200).json({
+          statusCode: 200,
+          message: "successfully fired a member",
         });
       }
     } catch (error) {

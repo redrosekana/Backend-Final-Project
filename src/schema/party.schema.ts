@@ -3,7 +3,7 @@ import mongoose, { Schema, model, Types } from "mongoose";
 interface Party {
   name: string;
   limit: number;
-  category: string;
+  category: string[];
   duration: number;
   place: string;
   description?: string;
@@ -19,7 +19,7 @@ const partySchema = new Schema<Party>({
     required: true,
     min: 1,
   },
-  category: { type: mongoose.Schema.Types.String, required: true },
+  category: { type: [{ type: mongoose.Schema.Types.String }], default: [] },
   duration: { type: mongoose.Schema.Types.Number, required: true },
   place: { type: mongoose.Schema.Types.String, required: true },
   description: { type: mongoose.Schema.Types.String },
