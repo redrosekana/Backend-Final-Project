@@ -213,7 +213,6 @@ class AuthController {
               displayName: 1,
               urlAvatar: 1,
               email: 1,
-              _id: 0,
             },
           },
           {
@@ -222,7 +221,6 @@ class AuthController {
               displayName: 1,
               urlAvatar: 1,
               email: 1,
-              _id: 0,
             },
           },
         ],
@@ -239,7 +237,6 @@ class AuthController {
               displayName: 1,
               urlAvatar: 1,
               email: 1,
-              _id: 0,
             },
           },
           {
@@ -248,7 +245,6 @@ class AuthController {
               displayName: 1,
               urlAvatar: 1,
               email: 1,
-              _id: 0,
             },
           },
         ],

@@ -11,4 +11,4 @@ RUN npm install -g typescript
 RUN tsc
 
 EXPOSE 5000
-CMD [ "npm", "run", "start:docker" ]
+CMD [ "npm", "run", "prod" ]
