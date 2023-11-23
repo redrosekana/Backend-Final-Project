@@ -1,7 +1,11 @@
 import express, { Router } from "express";
 
 // controller
-import BoardgameController from "../function/boardgame/boardgame.controller";
+import {
+  boardgames,
+  boardgameRecommendGuestUser,
+  boardgamesPopular,
+} from "../function/boardgame/boardgame.controller";
 
 // middleware
 import ValidationMiddleware from "../middleware/validation.middleware";
@@ -9,30 +13,14 @@ import ValidationMiddleware from "../middleware/validation.middleware";
 // dto
 import { BoardgameRecommendGuessDTO } from "../function/boardgame/boardgame.dto";
 
-class BoardgameRoute {
-  public router: Router;
-  private path: string;
-  private boardgameController: BoardgameController;
+const router: Router = express.Router();
 
-  constructor() {
-    this.router = express.Router();
-    this.path = "/boardgames";
-    this.boardgameController = new BoardgameController();
-    this.initialRoutes();
-  }
+router.get(`/boardgames`, boardgames);
+router.get(`/boardgames/popular`, boardgamesPopular);
+router.post(
+  `/boardgames/guest`,
+  ValidationMiddleware(BoardgameRecommendGuessDTO),
+  boardgameRecommendGuestUser
+);
 
-  private initialRoutes() {
-    this.router.get(`${this.path}`, this.boardgameController.boardgames);
-    this.router.get(
-      `${this.path}/popular`,
-      this.boardgameController.boardgamesPopular
-    );
-    this.router.post(
-      `${this.path}/guest`,
-      ValidationMiddleware(BoardgameRecommendGuessDTO),
-      this.boardgameController.boardgameRecommendGuestUser
-    );
-  }
-}
-
-export default BoardgameRoute;
+export default router;

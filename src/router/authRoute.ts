@@ -1,7 +1,14 @@
 import express, { Router } from "express";
 
 // controller
-import AuthController from "../function/auth/auth.controller";
+import {
+  register,
+  loginPassword,
+  loginGoogle,
+  tokenRenew,
+  detailUser,
+  updatePassword,
+} from "../function/auth/auth.controller";
 
 // middleware
 import checkAccessToken from "../middleware/checkAccessToken.middleware";
@@ -16,51 +23,26 @@ import {
   LoginGoogleDTO,
 } from "../function/auth/auth.dto";
 
-class AuthRoute {
-  public router: Router;
-  private path: string;
-  private authController: AuthController;
+const router: Router = express.Router();
 
-  constructor() {
-    this.router = express.Router();
-    this.path = "/auth";
-    this.authController = new AuthController();
-    this.initialRoutes();
-  }
+router.post(`/auth/register`, ValidationMiddleware(RegisterDTO), register);
+router.post(
+  `/auth/login-password`,
+  ValidationMiddleware(LoginPasswordDTO),
+  loginPassword
+);
+router.post(
+  `/auth/login-google`,
+  ValidationMiddleware(LoginGoogleDTO),
+  loginGoogle
+);
+router.get(`/auth/new-token`, checkRefreshToken, tokenRenew);
+router.get(`/auth/detail-user`, checkAccessToken, detailUser);
+router.post(
+  `/auth/password`,
+  checkAccessToken,
+  ValidationMiddleware(UpdatePasswordDTO),
+  updatePassword
+);
 
-  private initialRoutes() {
-    this.router.post(
-      `${this.path}/register`,
-      ValidationMiddleware(RegisterDTO),
-      this.authController.register
-    );
-    this.router.post(
-      `${this.path}/login-password`,
-      ValidationMiddleware(LoginPasswordDTO),
-      this.authController.loginPassword
-    );
-    this.router.post(
-      `${this.path}/login-google`,
-      ValidationMiddleware(LoginGoogleDTO),
-      this.authController.loginGoogle
-    );
-    this.router.get(
-      `${this.path}/new-token`,
-      checkRefreshToken,
-      this.authController.tokenRenew
-    );
-    this.router.get(
-      `${this.path}/detail-user`,
-      checkAccessToken,
-      this.authController.detailUser
-    );
-    this.router.post(
-      `${this.path}/password`,
-      checkAccessToken,
-      ValidationMiddleware(UpdatePasswordDTO),
-      this.authController.updatePassword
-    );
-  }
-}
-
-export default AuthRoute;
+export default router;

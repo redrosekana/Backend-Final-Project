@@ -1,9 +1,7 @@
-import App from "./app";
+import app from "./app";
 import * as dotenv from "dotenv";
-// import { validateEnv } from "./utils/validateEnv";
+
+import { PORT } from "./config/variable";
 
 dotenv.config();
-// validateEnv();
-
-const app = new App();
-app.listen();
+app.listen(PORT, () => console.log("Connect to port " + PORT));
