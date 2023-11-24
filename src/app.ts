@@ -18,55 +18,42 @@ import PartyRoute from "./router/partyRoute";
 import ErrorMiddleware from "./middleware/error.middleware";
 
 // enviroment variable
-import { URL_MONGODB, PORT } from "./config/variable";
+import { URL_MONGODB } from "./config/variable";
 
-export default class App {
-  public app: Express;
+const app = express();
 
-  constructor() {
-    this.app = express();
-    this.initialMiddleware();
-    this.initialConnectDatabase();
-    this.initialRoutes([
-      new UserRoute(),
-      new AuthRoute(),
-      new BoardgameRoute(),
-      new ForgetPasswordRoute(),
-      new NormalRoute(),
-      new PartyRoute(),
-    ]);
-    this.initialErrorMiddleware();
-  }
-
-  private initialConnectDatabase() {
-    mongoose.set("strictQuery", false);
-    mongoose.connect(URL_MONGODB).then(() => {
-      console.log("connect to mongodb datasbase successful");
-    });
-  }
-
-  private initialMiddleware() {
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true, limit: "100mb" }));
-    this.app.use(cors());
-    this.app.use(morgan("dev"));
-    this.app.use(express.static("public"));
-    this.app.set("view engine", "ejs");
-  }
-
-  private initialErrorMiddleware() {
-    this.app.use(ErrorMiddleware);
-  }
-
-  private initialRoutes(routes: Route[]) {
-    routes.forEach((route) => {
-      this.app.use("/", route.router);
-    });
-  }
-
-  public listen() {
-    this.app.listen(PORT, () => {
-      console.log(`connect to port ${PORT}`);
-    });
-  }
+function initialConnectDatabase() {
+  mongoose.set("strictQuery", false);
+  mongoose.connect(URL_MONGODB).then(() => {
+    console.log("connect to mongodb datasbase successful");
+  });
 }
+
+function initialMiddleware() {
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+  app.use(cors());
+  app.use(morgan("dev"));
+  app.use(express.static("public"));
+  app.set("view engine", "ejs");
+}
+
+function initialRoutes() {
+  app.use(NormalRoute);
+  app.use(UserRoute);
+  app.use(AuthRoute);
+  app.use(BoardgameRoute);
+  app.use(ForgetPasswordRoute);
+  app.use(PartyRoute);
+}
+
+function initialErrorMiddleware() {
+  app.use(ErrorMiddleware);
+}
+
+initialMiddleware();
+initialConnectDatabase();
+initialRoutes();
+initialErrorMiddleware();
+
+export default app;
