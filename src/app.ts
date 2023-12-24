@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 // interface
-import { Route } from "./interface/route.interface";
+// import { Route } from "./interface/route.interface";
 
 // router
 import NormalRoute from "./router/normalRoute";
@@ -13,6 +13,7 @@ import AuthRoute from "./router/authRoute";
 import BoardgameRoute from "./router/boardgameRoute";
 import ForgetPasswordRoute from "./router/forgetPasswordRoute";
 import PartyRoute from "./router/partyRoute";
+import ScoreRoute from "./router/scoreRoute";
 
 // middleware
 import ErrorMiddleware from "./middleware/error.middleware";
@@ -45,6 +46,7 @@ function initialRoutes() {
   app.use(BoardgameRoute);
   app.use(ForgetPasswordRoute);
   app.use(PartyRoute);
+  app.use(ScoreRoute);
 }
 
 function initialErrorMiddleware() {

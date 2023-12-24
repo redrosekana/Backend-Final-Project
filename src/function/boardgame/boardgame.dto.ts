@@ -1,7 +1,26 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, IsArray, IsOptional } from "class-validator";
 
 export class BoardgameRecommendGuessDTO {
   @IsNotEmpty()
   @IsString()
-  private boardgame_name!: string;
+  boardgame_name!: string;
+}
+
+export class BoardgameRecommendAuthDTO {
+  @IsOptional()
+  @IsString()
+  time!: string;
+
+  @IsOptional()
+  @IsString()
+  weight!: string;
+
+  @IsOptional()
+  @IsString()
+  players!: string;
+
+  @IsNotEmpty()
+  @IsString({ each: true })
+  @IsArray()
+  category!: string[];
 }

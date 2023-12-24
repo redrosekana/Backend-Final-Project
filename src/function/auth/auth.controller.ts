@@ -5,6 +5,7 @@ import { OAuth2Client } from "google-auth-library";
 
 // model
 import { userModel } from "../../schema/user.schema";
+import { scoreModel } from "../../schema/score.schema";
 
 // exception
 import { BadRequestException } from "../../exeptions/BadRequestException";
@@ -37,6 +38,10 @@ async function register(req: Request, res: Response, next: NextFunction) {
     } else {
       const salt = await bcrypt.genSalt(SALT);
       const passwordEncrypt = await bcrypt.hash(password, salt);
+      const scoring = await scoreModel.create({
+        scoreEntries: [],
+      });
+
       await userModel.create({
         displayName: displayName,
         username: username,
@@ -46,6 +51,7 @@ async function register(req: Request, res: Response, next: NextFunction) {
         }.svg`,
         email: email,
         provider: "password",
+        scoring: scoring.id,
       });
 
       res.status(201).json({
@@ -121,6 +127,10 @@ async function loginGoogle(req: Request, res: Response, next: NextFunction) {
     });
 
     if (!user) {
+      const scoring = await scoreModel.create({
+        scoreEntries: [],
+      });
+
       await userModel.create({
         displayName: "guest",
         email: googlePayload?.email,
@@ -128,6 +138,7 @@ async function loginGoogle(req: Request, res: Response, next: NextFunction) {
           1 + Math.floor(Math.random() * 60)
         }.svg`,
         provider: "google",
+        scoring: scoring.id,
       });
     }
 
@@ -199,7 +210,6 @@ async function detailUser(req: Request, res: Response, next: NextFunction) {
         email: { $eq: payload.email },
         provider: { $eq: payload.provider },
       })
-
       .populate({
         path: "ownerParty",
         select: {
@@ -249,8 +259,6 @@ async function detailUser(req: Request, res: Response, next: NextFunction) {
         ],
       })
       .select("-password -__v");
-
-    console.log(user);
 
     res.status(200).json({
       statusCode: 200,

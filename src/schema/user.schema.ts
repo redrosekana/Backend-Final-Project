@@ -6,11 +6,10 @@ interface User {
   password?: string;
   email?: string;
   urlAvatar?: string;
-  lat?: string;
-  lon?: string;
   provider: string;
   ownerParty?: Types.ObjectId;
   memberParty?: Types.ObjectId;
+  scoring: Types.ObjectId;
 }
 
 const userSchema = new Schema<User>({
@@ -19,8 +18,6 @@ const userSchema = new Schema<User>({
   password: { type: mongoose.Schema.Types.String },
   email: { type: mongoose.Schema.Types.String },
   urlAvatar: { type: mongoose.Schema.Types.String },
-  lat: { type: mongoose.Schema.Types.String },
-  lon: { type: mongoose.Schema.Types.String },
   provider: {
     type: mongoose.Schema.Types.String,
     required: true,
@@ -33,6 +30,10 @@ const userSchema = new Schema<User>({
   memberParty: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "party",
+  },
+  scoring: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "score",
   },
 });
 

@@ -5,13 +5,20 @@ import {
   boardgames,
   boardgameRecommendGuestUser,
   boardgamesPopular,
+  boardgameRecommendAuth,
 } from "../function/boardgame/boardgame.controller";
 
 // middleware
 import ValidationMiddleware from "../middleware/validation.middleware";
 
 // dto
-import { BoardgameRecommendGuessDTO } from "../function/boardgame/boardgame.dto";
+import {
+  BoardgameRecommendGuessDTO,
+  BoardgameRecommendAuthDTO,
+} from "../function/boardgame/boardgame.dto";
+
+// middleware
+import checkAccessToken from "../middleware/checkAccessToken.middleware";
 
 const router: Router = express.Router();
 
@@ -21,6 +28,12 @@ router.post(
   `/boardgames/guest`,
   ValidationMiddleware(BoardgameRecommendGuessDTO),
   boardgameRecommendGuestUser
+);
+router.post(
+  "/boardgames/recommend",
+  ValidationMiddleware(BoardgameRecommendAuthDTO),
+  checkAccessToken,
+  boardgameRecommendAuth
 );
 
 export default router;

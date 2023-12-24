@@ -37,8 +37,6 @@ async function createParty(req: Request, res: Response, next: NextFunction) {
         countMember: 1,
       };
 
-      console.log(body);
-
       const party = await partyModel.create(body);
       await userModel.findOneAndUpdate(
         {
