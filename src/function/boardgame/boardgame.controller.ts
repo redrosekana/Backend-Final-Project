@@ -199,7 +199,7 @@ async function boardgameRecommendAuth(
               },
             ],
           })
-          .select("name category");
+          .select("-__v -_id");
         // name playingtime weight minplayers category rank
 
         const bodyExcuteModel: Record<string, number> = {};
