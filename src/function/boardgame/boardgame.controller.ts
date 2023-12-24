@@ -132,10 +132,16 @@ async function boardgameRecommendAuth(
       select_3: { $gt: 2.8 }, // มากกว่า 3.5
     };
 
-    const MAPPING_PLAYERS: Record<string, any> = {
-      select_1: { $gte: 1, $lte: 2 }, // มากกว่าเท่ากับ 1 แต่น้อยกว่าเท่ากับ 2
-      select_2: { $gte: 3, $lte: 5 }, // มากกว่าเท่ากับ 3 แต่น้อยกว่าเท่ากับ 5
-      select_3: { $gt: 5 }, // มากกว่า 6
+    const MAPPING_PLAYERS_MIN: Record<string, any> = {
+      select_1: { $in: [1, 2] }, // มากกว่าเท่ากับ 1 แต่น้อยกว่าเท่ากับ 2
+      select_2: { $in: [1, 2, 3, 4, 5] }, // มากกว่าเท่ากับ 3 แต่น้อยกว่าเท่ากับ 5
+      select_3: { $in: [1, 2, 3, 4, 5] }, // มากกว่าเท่ากับ 5
+    };
+
+    const MAPPING_PLAYERS_MAX: Record<string, any> = {
+      select_1: { $in: [1, 2] }, // น้อยกว่าเท่ากับ 2
+      select_2: { $in: [3, 4, 5] }, // น้อยกว่าเท่ากับ 5
+      select_3: { $gt: 5 }, // มากกว่า 5
     };
 
     const time = (req.body.time as string).trim();
@@ -177,18 +183,23 @@ async function boardgameRecommendAuth(
               },
               {
                 minplayers: req.body.players
-                  ? MAPPING_PLAYERS[req.body.players]
+                  ? MAPPING_PLAYERS_MIN[req.body.players]
+                  : { $exists: true },
+              },
+              {
+                maxplayers: req.body.players
+                  ? MAPPING_PLAYERS_MAX[req.body.players]
                   : { $exists: true },
               },
               {
                 category:
                   req.body.category.length > 0
-                    ? { $exists: true }
+                    ? { $in: req.body.category }
                     : { $exists: true },
               },
             ],
           })
-          .select("-__v -_id");
+          .select("name category");
         // name playingtime weight minplayers category rank
 
         const bodyExcuteModel: Record<string, number> = {};
@@ -242,19 +253,24 @@ async function boardgameRecommendAuth(
               },
               {
                 minplayers: req.body.players
-                  ? MAPPING_PLAYERS[req.body.players]
+                  ? MAPPING_PLAYERS_MIN[req.body.players]
+                  : { $exists: true },
+              },
+              {
+                maxplayers: req.body.players
+                  ? MAPPING_PLAYERS_MAX[req.body.players]
                   : { $exists: true },
               },
               {
                 category:
                   req.body.category.length > 0
-                    ? { $exists: true }
+                    ? { $in: req.body.category }
                     : { $exists: true },
               },
             ],
           })
-          .select("-_id -__v")
-          .sort("-rank")
+          .select("-__v -_id")
+          .sort("rank")
           .limit(10);
 
         result = [...queryResult];
