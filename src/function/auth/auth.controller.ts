@@ -258,6 +258,13 @@ async function detailUser(req: Request, res: Response, next: NextFunction) {
           },
         ],
       })
+      .populate({
+        path: "scoring",
+        select: {
+          __v: 0,
+          _id: 0,
+        },
+      })
       .select("-password -__v");
 
     res.status(200).json({

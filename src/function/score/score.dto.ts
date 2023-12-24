@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsString, IsNumber, Min, Max } from "class-validator";
+import {
+  IsOptional,
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  Min,
+  Max,
+} from "class-validator";
 
 export class ScoreBoardgameDto {
   @IsNotEmpty()
@@ -10,4 +17,8 @@ export class ScoreBoardgameDto {
   @Min(0)
   @Max(10)
   score!: number;
+
+  @IsOptional()
+  @IsString()
+  suggestion!: string;
 }
