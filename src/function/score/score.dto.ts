@@ -1,24 +1,27 @@
 import {
-  IsOptional,
   IsNotEmpty,
+  IsArray,
+  ValidateNested,
   IsString,
   IsNumber,
-  Min,
-  Max,
 } from "class-validator";
+import { Type } from "class-transformer";
+import "reflect-metadata";
 
-export class ScoreBoardgameDto {
+class ScoreEntriesDTO {
   @IsNotEmpty()
   @IsString()
-  name!: string;
+  "name": string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Min(0)
-  @Max(10)
-  score!: number;
+  "score": number;
+}
 
-  @IsOptional()
-  @IsString()
-  suggestion!: string;
+export class ScoreBoardgameDTO {
+  @IsArray()
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => ScoreEntriesDTO)
+  "score_entries": ScoreEntriesDTO[];
 }

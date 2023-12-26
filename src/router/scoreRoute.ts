@@ -4,7 +4,7 @@ import express, { Router } from "express";
 import { scoreBoardgame } from "../function/score/score.controller";
 
 // dto
-import { ScoreBoardgameDto } from "../function/score/score.dto";
+import { ScoreBoardgameDTO } from "../function/score/score.dto";
 
 // middleware
 import ValidationMiddleware from "../middleware/validation.middleware";
@@ -15,7 +15,7 @@ const router: Router = express.Router();
 router.post(
   "/score",
   checkAccessToken,
-  ValidationMiddleware(ScoreBoardgameDto),
+  ValidationMiddleware(ScoreBoardgameDTO),
   scoreBoardgame
 );
 

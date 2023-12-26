@@ -10,8 +10,8 @@ export default function ValidationMiddleware(
   skipMissingProperties = false
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
-    validate(plainToInstance(type, req.body), { skipMissingProperties }).then(
-      (error: ValidationError[]) => {
+    validate(plainToInstance(type, req.body), { skipMissingProperties })
+      .then((error: ValidationError[]) => {
         if (error.length > 0) {
           let message: any = [];
 
@@ -25,7 +25,10 @@ export default function ValidationMiddleware(
         } else {
           next();
         }
-      }
-    );
+      })
+      .catch((error: Error) => {
+        console.log(error);
+        next(new BadRequestException("data that is send was invalid pattern"));
+      });
   };
 }

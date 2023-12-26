@@ -14,11 +14,21 @@ export async function scoreBoardgame(
   next: NextFunction
 ) {
   try {
-    let name = req.body.name as string;
-    let score = req.body.score as number;
-    let boardgame = await boardgameModel.findOne({ name: { $eq: name } });
+    let score_entries = req.body.score_entries;
+    let checkExistBoardgame = false;
 
-    if (!boardgame) {
+    for (let i = 0; i < score_entries.length; i++) {
+      const boardgame = await boardgameModel.findOne({
+        name: { $eq: score_entries[i].name },
+      });
+
+      if (!boardgame) {
+        checkExistBoardgame = true;
+        break;
+      }
+    }
+
+    if (checkExistBoardgame) {
       next(new BadRequestException("this boardgame doesn't exist in system"));
     } else {
       let user = await userModel.findOne({
@@ -30,16 +40,20 @@ export async function scoreBoardgame(
       let setScoreEntries = scoring?.scoreEntries;
 
       if (Array.isArray(setScoreEntries)) {
-        setScoreEntries = setScoreEntries
-          .filter((entrie) => entrie.name !== name)
-          .map((entrie) => ({ name: entrie.name, score: entrie.score }));
+        for (let i = 0; i < score_entries.length; i++) {
+          setScoreEntries = setScoreEntries
+            .filter((entrie) => entrie.name !== score_entries[i].name)
+            .map((entrie) => ({ name: entrie.name, score: entrie.score }));
+
+          setScoreEntries = [
+            ...setScoreEntries,
+            { name: score_entries[i].name, score: score_entries[i].score },
+          ];
+        }
       }
 
       await scoreModel.findByIdAndUpdate(user?.scoring, {
         $set: { scoreEntries: setScoreEntries },
-      });
-      await scoreModel.findByIdAndUpdate(user?.scoring, {
-        $push: { scoreEntries: { name, score } },
       });
 
       res.status(200).json({
