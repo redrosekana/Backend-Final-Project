@@ -267,7 +267,7 @@ async function transferenceOwner(
           "you are owner so you can't transfer the owner yourself"
         )
       );
-    } else if (true) {
+    } else {
       await userModel.findOneAndUpdate(
         {
           email: { $eq: email },

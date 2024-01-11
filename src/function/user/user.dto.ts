@@ -1,16 +1,29 @@
-import { IsOptional, IsString, IsUrl } from "class-validator";
+import {
+  IsOptional,
+  IsString,
+  IsUrl,
+  IsArray,
+  IsNotEmpty,
+} from "class-validator";
 
 export class UpdateUserDTO {
   @IsOptional()
   @IsString()
-  displayName!: string;
+  "displayName": string;
 
   @IsOptional()
   @IsString()
-  username!: string;
+  "username": string;
 }
 
 export class ChangeAvatarDTO {
   @IsUrl()
-  url!: string;
+  "url": string;
+}
+
+export class RemoveScoreBoardgameDTO {
+  @IsArray()
+  @IsNotEmpty()
+  @IsString({ each: true })
+  "scoreBoardgameNameEntries": string[];
 }

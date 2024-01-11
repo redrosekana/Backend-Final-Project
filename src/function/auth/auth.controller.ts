@@ -91,10 +91,10 @@ async function loginPassword(req: Request, res: Response, next: NextFunction) {
           provider: user.provider,
         };
         const accessToken = jwt.sign(payload, SECRET_ACCESSTOKEN, {
-          expiresIn: "6000000ms",
+          expiresIn: "900000ms",
         });
         const refreshToken = jwt.sign(payload, SECRET_REFRESHTOKEN, {
-          expiresIn: "1800000ms",
+          expiresIn: "3600000ms",
         });
 
         res.status(200).json({
@@ -148,10 +148,10 @@ async function loginGoogle(req: Request, res: Response, next: NextFunction) {
       provider: "google",
     };
     const accessToken = jwt.sign(payload, SECRET_ACCESSTOKEN, {
-      expiresIn: "6000000ms",
+      expiresIn: "900000ms",
     });
     const refreshToken = jwt.sign(payload, SECRET_REFRESHTOKEN, {
-      expiresIn: "1800000ms",
+      expiresIn: "3600000ms",
     });
 
     res.status(200).json({
@@ -183,10 +183,10 @@ async function tokenRenew(req: Request, res: Response, next: NextFunction) {
         provider: user.provider,
       };
       const accessToken = jwt.sign(payload, SECRET_ACCESSTOKEN, {
-        expiresIn: "600000ms",
+        expiresIn: "900000ms",
       });
       const refreshToken = jwt.sign(payload, SECRET_REFRESHTOKEN, {
-        expiresIn: "1800000ms",
+        expiresIn: "3600000ms",
       });
 
       res.status(200).json({
@@ -291,8 +291,6 @@ async function updatePassword(req: Request, res: Response, next: NextFunction) {
       password_old,
       user?.password as string
     );
-
-    console.log("ok");
 
     if (!checkPassword) {
       next(new UnAuthorizationException("invalid old password"));

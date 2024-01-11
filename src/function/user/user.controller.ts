@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 // model
 import { userModel } from "../../schema/user.schema";
+import { scoreModel } from "../../schema/score.schema";
+import { boardgameModel } from "../../schema/boardgame.schema";
 
 // exception
 import { BadRequestException } from "../../exeptions/BadRequestException";
@@ -134,4 +136,47 @@ async function changeAvatar(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { updateUser, changeAvatar };
+async function removeScoreBoardgame(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email, provider } = req.payload;
+  const { scoreBoardgameNameEntries } = req.body;
+
+  const currentUser = await userModel.findOne({
+    email: { $eq: email },
+    provider: { $eq: provider },
+  });
+  const scoringOfCurrentUser = await scoreModel.findById(currentUser?.scoring);
+  let scoreEntriesOfCurrentUser = scoringOfCurrentUser?.scoreEntries;
+
+  for (let i = 0; i < scoreBoardgameNameEntries.length; i++) {
+    if (Array.isArray(scoreEntriesOfCurrentUser)) {
+      scoreEntriesOfCurrentUser = scoreEntriesOfCurrentUser?.filter(
+        (entrie) => entrie.name !== scoreBoardgameNameEntries[i]
+      );
+    }
+  }
+
+  scoreEntriesOfCurrentUser = scoreEntriesOfCurrentUser?.map((entrie) => ({
+    name: entrie.name,
+    score: entrie.score,
+  }));
+
+  await scoreModel.findByIdAndUpdate(currentUser?.scoring, {
+    $set: { scoreEntries: scoreEntriesOfCurrentUser },
+  });
+
+  try {
+    res.status(200).json({
+      statusCode: 200,
+      message: "successfully remove scoring boardgame",
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+export { updateUser, changeAvatar, removeScoreBoardgame };

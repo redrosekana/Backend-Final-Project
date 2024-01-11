@@ -1,10 +1,18 @@
 import express, { Router } from "express";
 
 // controller
-import { updateUser, changeAvatar } from "../function/user/user.controller";
+import {
+  updateUser,
+  changeAvatar,
+  removeScoreBoardgame,
+} from "../function/user/user.controller";
 
 // dto
-import { UpdateUserDTO, ChangeAvatarDTO } from "../function/user/user.dto";
+import {
+  UpdateUserDTO,
+  ChangeAvatarDTO,
+  RemoveScoreBoardgameDTO,
+} from "../function/user/user.dto";
 
 // middleware
 import ValidationMiddleware from "../middleware/validation.middleware";
@@ -24,6 +32,13 @@ router.patch(
   checkAccessToken,
   ValidationMiddleware(ChangeAvatarDTO),
   changeAvatar
+);
+
+router.patch(
+  "/users/scoring",
+  checkAccessToken,
+  ValidationMiddleware(RemoveScoreBoardgameDTO),
+  removeScoreBoardgame
 );
 
 export default router;

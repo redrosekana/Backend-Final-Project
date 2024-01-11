@@ -84,7 +84,7 @@ async function boardgameRecommendGuestUser(
           name: { $eq: boardgameCurrent.game },
         })
         .select(
-          "-_id id name minplayers maxplayers playingtime minage yearpublished description image"
+          "-_id id name minplayers maxplayers playingtime minage weight yearpublished description image"
         );
 
       for (let i = 0; i < boardgameRecommendEntries.length; i++) {

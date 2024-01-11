@@ -14,18 +14,16 @@ export async function scoreBoardgame(
   next: NextFunction
 ) {
   try {
-    let score_entries = req.body.score_entries;
+    let name: string = (req.body.name as string).trim();
+    let score: number = req.body.score as number;
     let checkExistBoardgame = false;
 
-    for (let i = 0; i < score_entries.length; i++) {
-      const boardgame = await boardgameModel.findOne({
-        name: { $eq: score_entries[i].name },
-      });
+    const boardgame = await boardgameModel.findOne({
+      name: { $eq: name },
+    });
 
-      if (!boardgame) {
-        checkExistBoardgame = true;
-        break;
-      }
+    if (!boardgame) {
+      checkExistBoardgame = true;
     }
 
     if (checkExistBoardgame) {
@@ -39,17 +37,12 @@ export async function scoreBoardgame(
       let scoring = await scoreModel.findById(user?.scoring);
       let setScoreEntries = scoring?.scoreEntries;
 
-      if (Array.isArray(setScoreEntries)) {
-        for (let i = 0; i < score_entries.length; i++) {
-          setScoreEntries = setScoreEntries
-            .filter((entrie) => entrie.name !== score_entries[i].name)
-            .map((entrie) => ({ name: entrie.name, score: entrie.score }));
+      setScoreEntries = setScoreEntries
+        ?.filter((entrie) => entrie.name !== name)
+        .map((entrie) => ({ name: entrie.name, score: entrie.score }));
 
-          setScoreEntries = [
-            ...setScoreEntries,
-            { name: score_entries[i].name, score: score_entries[i].score },
-          ];
-        }
+      if (Array.isArray(setScoreEntries)) {
+        setScoreEntries = [...setScoreEntries, { name: name, score: score }];
       }
 
       await scoreModel.findByIdAndUpdate(user?.scoring, {
