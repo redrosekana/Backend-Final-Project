@@ -5,6 +5,7 @@ import { scoreBoardgame } from "../function/score/score.controller";
 
 // dto
 import { ScoreBoardgameDTO } from "../function/score/score.dto";
+
 // middleware
 import ValidationMiddleware from "../middleware/validation.middleware";
 import checkAccessToken from "../middleware/checkAccessToken.middleware";
