@@ -40,14 +40,15 @@ async function boardgamesPopular(
   try {
     const result = await axios.get(URL_POPULARBOARDGAME);
     const boardgamesJson = convert.xml2js(result.data);
+
     for (let i = 0; i < boardgamesJson.elements[0].elements.length; i++) {
       if (i == 15) break;
       const tmp = boardgamesJson.elements[0].elements[i];
       const boardgamePopular = {
         id: tmp.attributes.id,
-        name: tmp.elements[1].attributes.value,
-        picture: tmp.elements[0].attributes.value,
-        year: tmp.elements[2].attributes.value,
+        name: tmp.elements[1] ? tmp.elements[1].attributes.value : "",
+        picture: tmp.elements[0] ? tmp.elements[0].attributes.value : "",
+        year: tmp.elements[2] ? tmp.elements[2].attributes.value : "",
       };
       data.push(boardgamePopular);
     }
