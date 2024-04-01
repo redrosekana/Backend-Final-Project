@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.URL_CLOUDSTORAGE = exports.URL_POPULARBOARDGAME = exports.URL_FRONTEND = exports.PASSWORD_EMAIL = exports.SECRET_EMAIL = exports.SECRET_REFRESHTOKEN = exports.SECRET_ACCESSTOKEN = exports.SALT = exports.PORT = exports.URL_MONGODB = void 0;
+exports.URL_SERVICE_MODEL = exports.URL_CLOUDSTORAGE = exports.URL_POPULARBOARDGAME = exports.URL_FRONTEND = exports.PASSWORD_EMAIL = exports.SECRET_EMAIL = exports.SECRET_REFRESHTOKEN = exports.SECRET_ACCESSTOKEN = exports.SALT = exports.PORT = exports.URL_MONGODB = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const URL_MONGODB = process.env.URL_MONGODB;
@@ -46,3 +46,5 @@ const URL_POPULARBOARDGAME = process.env.URL_POPULARBOARDGAME;
 exports.URL_POPULARBOARDGAME = URL_POPULARBOARDGAME;
 const URL_CLOUDSTORAGE = process.env.URL_CLOUDSTORAGE;
 exports.URL_CLOUDSTORAGE = URL_CLOUDSTORAGE;
+const URL_SERVICE_MODEL = process.env.URL_SERVICE_MODEL;
+exports.URL_SERVICE_MODEL = URL_SERVICE_MODEL;

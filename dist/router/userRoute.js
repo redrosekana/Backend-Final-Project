@@ -4,20 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const user_controller_1 = __importDefault(require("../function/user/user.controller"));
+// controller
+const user_controller_1 = require("../function/user/user.controller");
+// dto
 const user_dto_1 = require("../function/user/user.dto");
+// middleware
 const validation_middleware_1 = __importDefault(require("../middleware/validation.middleware"));
 const checkAccessToken_middleware_1 = __importDefault(require("../middleware/checkAccessToken.middleware"));
-class UserRoute {
-    constructor() {
-        this.router = express_1.default.Router();
-        this.path = "/users";
-        this.userController = new user_controller_1.default();
-        this.initialRoutes();
-    }
-    initialRoutes() {
-        this.router.patch(`${this.path}`, checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.UpdateUserDTO), this.userController.updateUser);
-        this.router.patch(`${this.path}/avatar`, checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.ChangeAvatarDTO), this.userController.changeAvatar);
-    }
-}
-exports.default = UserRoute;
+const router = express_1.default.Router();
+router.patch("/users", checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.UpdateUserDTO), user_controller_1.updateUser);
+router.patch("/users/avatar", checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.ChangeAvatarDTO), user_controller_1.changeAvatar);
+router.patch("/users/scoring", checkAccessToken_middleware_1.default, (0, validation_middleware_1.default)(user_dto_1.RemoveScoreBoardgameDTO), user_controller_1.removeScoreBoardgame);
+exports.default = router;

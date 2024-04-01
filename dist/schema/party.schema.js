@@ -32,7 +32,7 @@ const partySchema = new mongoose_1.Schema({
         required: true,
         min: 1,
     },
-    category: { type: mongoose_1.default.Schema.Types.String, required: true },
+    category: { type: [{ type: mongoose_1.default.Schema.Types.String }], default: [] },
     duration: { type: mongoose_1.default.Schema.Types.Number, required: true },
     place: { type: mongoose_1.default.Schema.Types.String, required: true },
     description: { type: mongoose_1.default.Schema.Types.String },

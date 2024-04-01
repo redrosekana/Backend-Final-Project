@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BoardgameRecommendGuessDTO = void 0;
+exports.BoardgameRecommendAuthDTO = exports.BoardgameRecommendGuessDTO = void 0;
 const class_validator_1 = require("class-validator");
 class BoardgameRecommendGuessDTO {
 }
@@ -15,3 +15,23 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)()
 ], BoardgameRecommendGuessDTO.prototype, "boardgame_name", void 0);
+class BoardgameRecommendAuthDTO {
+}
+exports.BoardgameRecommendAuthDTO = BoardgameRecommendAuthDTO;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)()
+], BoardgameRecommendAuthDTO.prototype, "time", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)()
+], BoardgameRecommendAuthDTO.prototype, "weight", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)()
+], BoardgameRecommendAuthDTO.prototype, "players", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    (0, class_validator_1.IsArray)()
+], BoardgameRecommendAuthDTO.prototype, "category", void 0);

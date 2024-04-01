@@ -6,30 +6,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RemoveScoreBoardgameDTO = exports.ChangeAvatarDTO = exports.UpdateUserDTO = void 0;
+exports.ScoreBoardgameDTO = void 0;
 const class_validator_1 = require("class-validator");
-class UpdateUserDTO {
+require("reflect-metadata");
+class ScoreBoardgameDTO {
 }
-exports.UpdateUserDTO = UpdateUserDTO;
+exports.ScoreBoardgameDTO = ScoreBoardgameDTO;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)()
-], UpdateUserDTO.prototype, "displayName", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)()
-], UpdateUserDTO.prototype, "username", void 0);
-class ChangeAvatarDTO {
-}
-exports.ChangeAvatarDTO = ChangeAvatarDTO;
-__decorate([
-    (0, class_validator_1.IsUrl)()
-], ChangeAvatarDTO.prototype, "url", void 0);
-class RemoveScoreBoardgameDTO {
-}
-exports.RemoveScoreBoardgameDTO = RemoveScoreBoardgameDTO;
-__decorate([
-    (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)({ each: true })
-], RemoveScoreBoardgameDTO.prototype, "scoreBoardgameNameEntries", void 0);
+    (0, class_validator_1.IsString)()
+], ScoreBoardgameDTO.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)()
+], ScoreBoardgameDTO.prototype, "score", void 0);
+// export class ScoreBoardgameDTO {
+//   @IsArray()
+//   @IsNotEmpty()
+//   @ValidateNested({ each: true })
+//   @Type(() => ScoreEntriesDTO)
+//   "score_entries": ScoreEntriesDTO[];
+// }

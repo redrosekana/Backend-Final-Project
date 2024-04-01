@@ -31,8 +31,6 @@ const userSchema = new mongoose_1.Schema({
     password: { type: mongoose_1.default.Schema.Types.String },
     email: { type: mongoose_1.default.Schema.Types.String },
     urlAvatar: { type: mongoose_1.default.Schema.Types.String },
-    lat: { type: mongoose_1.default.Schema.Types.String },
-    lon: { type: mongoose_1.default.Schema.Types.String },
     provider: {
         type: mongoose_1.default.Schema.Types.String,
         required: true,
@@ -45,6 +43,10 @@ const userSchema = new mongoose_1.Schema({
     memberParty: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "party",
+    },
+    scoring: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "score",
     },
 });
 exports.userModel = (0, mongoose_1.model)("user", userSchema);

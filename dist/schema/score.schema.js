@@ -22,15 +22,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __importDefault(require("./app"));
-const dotenv = __importStar(require("dotenv"));
-const variable_1 = require("./config/variable");
-dotenv.config();
-app_1.default.listen(variable_1.PORT, () => {
-    console.log("Connect to port " + variable_1.PORT);
-    console.log(process.env.NODE_ENV);
+exports.scoreModel = void 0;
+const mongoose_1 = __importStar(require("mongoose"));
+const scoreSchema = new mongoose_1.Schema({
+    scoreEntries: {
+        type: [
+            {
+                name: { type: mongoose_1.default.Schema.Types.String, require: true },
+                score: { type: mongoose_1.default.Schema.Types.Number, require: true },
+            },
+        ],
+        default: [],
+    },
 });
+exports.scoreModel = (0, mongoose_1.model)("score", scoreSchema);

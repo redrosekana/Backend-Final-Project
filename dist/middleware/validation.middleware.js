@@ -6,7 +6,8 @@ const class_validator_1 = require("class-validator");
 const BadRequestException_1 = require("../exeptions/BadRequestException");
 function ValidationMiddleware(type, skipMissingProperties = false) {
     return (req, res, next) => {
-        (0, class_validator_1.validate)((0, class_transformer_1.plainToInstance)(type, req.body), { skipMissingProperties }).then((error) => {
+        (0, class_validator_1.validate)((0, class_transformer_1.plainToInstance)(type, req.body), { skipMissingProperties })
+            .then((error) => {
             if (error.length > 0) {
                 let message = [];
                 for (let i = 0; i < error.length; i++) {
@@ -20,6 +21,10 @@ function ValidationMiddleware(type, skipMissingProperties = false) {
             else {
                 next();
             }
+        })
+            .catch((error) => {
+            console.log(error);
+            next(new BadRequestException_1.BadRequestException("data that is send was invalid pattern"));
         });
     };
 }

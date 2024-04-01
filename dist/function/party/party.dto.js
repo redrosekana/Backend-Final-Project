@@ -6,27 +6,42 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TransferenceOwnerDTO = exports.ExpulsionMemberDTO = exports.PartyCreateDto = void 0;
 const class_validator_1 = require("class-validator");
-class PartyDto {
+class PartyCreateDto {
 }
-exports.default = PartyDto;
+exports.PartyCreateDto = PartyCreateDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)()
-], PartyDto.prototype, "name", void 0);
+], PartyCreateDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)()
-], PartyDto.prototype, "limit", void 0);
+], PartyCreateDto.prototype, "limit", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)()
+], PartyCreateDto.prototype, "category", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)()
-], PartyDto.prototype, "category", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)()
-], PartyDto.prototype, "place", void 0);
+], PartyCreateDto.prototype, "place", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)()
-], PartyDto.prototype, "description", void 0);
+], PartyCreateDto.prototype, "description", void 0);
+class ExpulsionMemberDTO {
+}
+exports.ExpulsionMemberDTO = ExpulsionMemberDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)()
+], ExpulsionMemberDTO.prototype, "user_id", void 0);
+class TransferenceOwnerDTO {
+}
+exports.TransferenceOwnerDTO = TransferenceOwnerDTO;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)()
+], TransferenceOwnerDTO.prototype, "user_id", void 0);

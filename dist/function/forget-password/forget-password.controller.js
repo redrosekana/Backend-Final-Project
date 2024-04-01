@@ -35,6 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.resetPassword = exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const ejs_1 = __importDefault(require("ejs"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -48,83 +49,82 @@ const BadRequestException_1 = require("../../exeptions/BadRequestException");
 const variable_1 = require("../../config/variable");
 // utils
 const validateEmail_1 = require("../../utils/validateEmail");
-class ForgetPasswordController {
-    sendEmail(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const email = req.body.email.trim();
-            if (!(0, validateEmail_1.ValidateEmail)(email)) {
-                next(new BadRequestException_1.BadRequestException("invalid format email"));
+function sendEmail(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const email = req.body.email.trim();
+        if (!(0, validateEmail_1.ValidateEmail)(email)) {
+            next(new BadRequestException_1.BadRequestException("invalid format email"));
+        }
+        else {
+            const user = yield user_schema_1.userModel.findOne({ email: { $eq: email } });
+            if (!user) {
+                next(new BadRequestException_1.BadRequestException("there is no email in the system"));
             }
             else {
-                const user = yield user_schema_1.userModel.findOne({ email: { $eq: email } });
-                if (!user) {
-                    next(new BadRequestException_1.BadRequestException("there is no email in the system"));
-                }
-                else {
-                    const transporter = nodemailer_1.default.createTransport({
-                        service: "Gmail",
-                        secure: false,
-                        requireTLS: true,
-                        auth: {
-                            user: "sukachathum.s@ku.th",
-                            pass: variable_1.PASSWORD_EMAIL,
-                        },
-                        logger: true,
-                    });
-                    const payload = { email: email };
-                    const token = jwt.sign(payload, variable_1.SECRET_EMAIL, {
-                        expiresIn: "300000ms",
-                    });
-                    const contentHTML = ejs_1.default.render(fs.readFileSync("./views/index.ejs", "utf8"), {
-                        link: `<a class='btn' href='${variable_1.URL_FRONTEND}?token=${token}'>ยืนยันตัวตน</a>`,
-                    });
-                    const emailDetail = {
-                        from: '"Boardgame recCommu" <sukachathum.s@ku.th>',
-                        to: `'User' <${email}>`,
-                        subject: "Reset Password",
-                        date: new Date(),
-                        html: contentHTML,
-                    };
-                    transporter.sendMail(emailDetail, (error) => {
-                        if (error) {
-                            next(error);
-                        }
-                        else {
-                            res.status(200).json({
-                                statusCode: 200,
-                                message: "successfully send email",
-                            });
-                        }
-                    });
-                }
-            }
-        });
-    }
-    resetPassword(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const token = req.body.token.trim();
-                const password_new = req.body.password_new.trim();
-                const payload = jwt.verify(token, variable_1.SECRET_EMAIL);
-                const salt = yield bcrypt_1.default.genSalt(variable_1.SALT);
-                const passwordEncrypt = yield bcrypt_1.default.hash(password_new, salt);
-                yield user_schema_1.userModel.findOneAndUpdate({
-                    email: { $eq: payload.email },
-                }, {
-                    $set: {
-                        password: passwordEncrypt,
+                const transporter = nodemailer_1.default.createTransport({
+                    service: "Gmail",
+                    secure: false,
+                    requireTLS: true,
+                    auth: {
+                        user: "sukachathum.s@ku.th",
+                        pass: variable_1.PASSWORD_EMAIL,
                     },
+                    logger: true,
                 });
-                res.status(201).json({
-                    statusCode: 201,
-                    message: "successfully reset password",
+                const payload = { email: email };
+                const token = jwt.sign(payload, variable_1.SECRET_EMAIL, {
+                    expiresIn: "300000ms",
+                });
+                const contentHTML = ejs_1.default.render(fs.readFileSync("./views/index.ejs", "utf8"), {
+                    link: `<a class='btn' href='${variable_1.URL_FRONTEND}?token=${token}'>ยืนยันตัวตน</a>`,
+                });
+                const emailDetail = {
+                    from: '"Boardgame recCommu" <sukachathum.s@ku.th>',
+                    to: `'User' <${email}>`,
+                    subject: "Reset Password",
+                    date: new Date(),
+                    html: contentHTML,
+                };
+                transporter.sendMail(emailDetail, (error) => {
+                    if (error) {
+                        next(error);
+                    }
+                    else {
+                        res.status(200).json({
+                            statusCode: 200,
+                            message: "successfully send email",
+                        });
+                    }
                 });
             }
-            catch (error) {
-                console.log(error);
-                next(error);
-            }
-        });
-    }
+        }
+    });
 }
-exports.default = ForgetPasswordController;
+exports.sendEmail = sendEmail;
+function resetPassword(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const token = req.body.token.trim();
+            const password_new = req.body.password_new.trim();
+            const payload = jwt.verify(token, variable_1.SECRET_EMAIL);
+            const salt = yield bcrypt_1.default.genSalt(variable_1.SALT);
+            const passwordEncrypt = yield bcrypt_1.default.hash(password_new, salt);
+            yield user_schema_1.userModel.findOneAndUpdate({
+                email: { $eq: payload.email },
+            }, {
+                $set: {
+                    password: passwordEncrypt,
+                },
+            });
+            res.status(201).json({
+                statusCode: 201,
+                message: "successfully reset password",
+            });
+        }
+        catch (error) {
+            console.log(error);
+            next(error);
+        }
+    });
+}
+exports.resetPassword = resetPassword;
